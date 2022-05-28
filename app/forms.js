@@ -1,0 +1,40 @@
+import { uuid } from "./helpers"
+import { PROJ } from "./model"
+
+const addProject = (mdl, state) => {
+  let project = PROJ(uuid())
+  project.title = state.title
+  mdl.projects.push(project)
+  mdl.state.showModal = false
+}
+
+const NewProjectForm = () => {
+  const state = {
+    title: "",
+  }
+
+  return {
+    view: ({ attrs: { mdl } }) =>
+      m(
+        "form.w3-container.w3-card.w3-white.w3-animate-zoom",
+
+        m(
+          "div.w3-section",
+          m("label", m("b", "Project Title")),
+          m("input.w3-input.w3-border-bottom", {
+            type: "text",
+            value: state.title,
+            oninput: (e) => (state.title = e.target.value),
+          })
+        ),
+        m(
+          "button.w3-button.w3-block.w3-green.w3-section.w3-padding",
+          { onclick: () => addProject(mdl, state) },
+          "add"
+        )
+      ),
+  }
+}
+
+export default NewProjectForm
+

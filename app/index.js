@@ -1,5 +1,6 @@
 import App from "./app.js"
 import model from "./model.js"
+import { log } from "./helpers"
 
 const root = document.body
 let winW = window.innerWidth
@@ -27,8 +28,8 @@ if (process.env.NODE_ENV !== "production") {
 
 // set display profiles
 const getProfile = (w) => {
-  if (w < 668) return "phone"
-  if (w < 920) return "tablet"
+  if (w <= 411) return "phone"
+  if (w <= 1000) return "tablet"
   return "desktop"
 }
 
@@ -48,3 +49,4 @@ model.settings.profile = getProfile(winW)
 checkWidth(winW)
 
 m.mount(root, App(model))
+

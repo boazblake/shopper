@@ -9,13 +9,20 @@
     "fresh": "yarn run clean && yarn install && yarn run start",
     "debug": "export LOGGY_STACKS=1 && yarn run start",
     "start": "brunch watch --server",
-    "build:pre": "rm -rf docs",
+    "strip-comments": "babel src/ -d docs/",
+    "build:pre": "rm -rf docs; yarn run strip-comments",
     "build": "yarn run build:pre && brunch build --production"
   },
   "dependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-flow": "^7.12.13",
     "@mithril-icons/clarity": "^1.2.0",
+    "@types/node": "^14.14.33",
+    "classnames": "^2.3.1",
     "interactjs": "^1.9.10",
-    "mithril": "^1.1.6",
+    "mithril": "^2.2.0",
     "mithril-stream": "^2.0.0",
     "ramda": "^0.27.0",
     "spectre.css": "^0.5.8"

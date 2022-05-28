@@ -8,16 +8,16 @@ const drag = (mdl) => (colId) => (evt) => {
 const Card = () => {
   return {
     view: ({ attrs: { colId, cardId, mdl } }) => {
-      let card = mdl.cards.filter(propEq("id", cardId))[0]
+      let card = mdl.state.project.cards.filter(propEq("id", cardId))[0]
       return m(
-        ".card",
+        ".w3-list-item",
         { id: cardId, draggable: true, ondragstart: drag(mdl)(colId) },
         [
           m(".card-header", [
             m("p.card-id", cardId),
 
             m(
-              "input.panel-title",
+              "input.panel-title w3-border",
               {
                 oninput: (e) => (card.name = e.target.value),
                 placeholder: "card title",
@@ -43,3 +43,4 @@ const Card = () => {
 }
 
 export default Card
+

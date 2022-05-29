@@ -8,35 +8,20 @@ const drag = (mdl) => (colId) => (evt) => {
 const Card = () => {
   return {
     view: ({ attrs: { colId, cardId, mdl } }) => {
-      let card = mdl.state.project.cards.filter(propEq("id", cardId))[0]
+      let card = mdl.currentProject.cards.filter(propEq("id", cardId))[0]
       return m(
-        ".w3-list-item",
+        "li.w3-list-item",
         { id: cardId, draggable: true, ondragstart: drag(mdl)(colId) },
-        [
-          m(".card-header", [
-            m("p.card-id", cardId),
-
-            m(
-              "input.panel-title w3-border",
-              {
-                oninput: (e) => (card.name = e.target.value),
-                placeholder: "card title",
-              },
-              card.name
-            ),
-          ]),
-          m(".card-body", [
-            m(
-              "textbox.panel-title",
-              {
-                oninput: (e) => (card.name = e.target.value),
-                placeholder: "card title",
-              },
-              card.name
-            ),
-          ]),
-          m(".card-footer"),
-        ]
+        m("input.w3-input", {
+          oninput: (e) => (card.title = e.target.value),
+          placeholder: "issue",
+          value: card.title,
+        }),
+        m("textarea.w3-input", {
+          oninput: (e) => (card.text = e.target.value),
+          placeholder: "text",
+          value: card.text,
+        })
       )
     },
   }

@@ -1,4 +1,13 @@
+import { m } from "mithril"
+import { isEmpty } from "ramda"
 import NewProjectForm from "./forms"
+import { findCurrentProject } from "./helpers"
+
+const selectProject = (mdl, project) => {
+  console.log(project)
+  mdl.state.projectId = project.id
+  mdl.currentProject = findCurrentProject(mdl)
+}
 
 const SideBar = () => {
   return {
@@ -30,7 +39,20 @@ const SideBar = () => {
         ),
 
         mdl.projects.map((project) =>
-          m("button.w3-bar-item.w3-button", project.title)
+          m(
+            ".w3-right-align",
+            m(
+              "button.w3-bar-item.w3-button",
+              { onclick: () => selectProject(mdl, project) },
+              project.title
+            ),
+
+            !isEmpty(project.cols) &&
+              m(
+                "ul.w3-list",
+                project.cols.map((col) => m(".w3-list-item", col.title))
+              )
+          )
         )
       ),
   }

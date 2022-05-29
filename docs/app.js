@@ -156,6 +156,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _helpers = require("./helpers");
+
 var _sidebar = _interopRequireDefault(require("./sidebar"));
 
 var _toolbar = _interopRequireDefault(require("./toolbar"));
@@ -170,8 +172,12 @@ var moveRight = function moveRight(state, mdl) {
   return mdl.settings.profile == "desktop" ? "move-right" : state.sidebar.open ? "move-right" : "";
 };
 
-var initApp = function initApp(mdl, state) {
-  return mdl.state.project = mdl.projects[0];
+var initApp = function initApp(mdl) {
+  if (!mdl.state.projectId) {
+    mdl.state.projectId = mdl.projects[0].id;
+  }
+
+  return (0, _helpers.findCurrentProject)(mdl);
 };
 
 var App = function App(mdl) {
@@ -184,10 +190,12 @@ var App = function App(mdl) {
     }
   };
   console.log(mdl, state);
-  initApp(mdl, state);
+  mdl.currentProject = initApp(mdl);
   return {
     view: function view() {
-      return m("section", m(_sidebar["default"], {
+      return m("section", m(_modal["default"], {
+        mdl: mdl
+      }), m(_sidebar["default"], {
         mdl: mdl,
         state: state
       }), m("section.w3-main#main", {
@@ -195,13 +203,11 @@ var App = function App(mdl) {
       }, m(_toolbar["default"], {
         mdl: mdl,
         state: state
-      }), m(_modal["default"], {
-        mdl: mdl
       }), m("article.w3-row w3-ul", {
         style: {
           overflowX: "auto"
         }
-      }, mdl.state.project.cols.map(function (col, idx) {
+      }, mdl.currentProject.cols.map(function (col, idx) {
         return m(_column["default"], {
           key: idx,
           col: col,
@@ -242,22 +248,24 @@ var Card = function Card() {
           colId = _ref$attrs.colId,
           cardId = _ref$attrs.cardId,
           mdl = _ref$attrs.mdl;
-      var card = mdl.state.project.cards.filter((0, _ramda.propEq)("id", cardId))[0];
-      return m(".w3-list-item", {
+      var card = mdl.currentProject.cards.filter((0, _ramda.propEq)("id", cardId))[0];
+      return m("li.w3-list-item", {
         id: cardId,
         draggable: true,
         ondragstart: drag(mdl)(colId)
-      }, [m(".card-header", [m("p.card-id", cardId), m("input.panel-title w3-border", {
+      }, m("input.w3-input", {
         oninput: function oninput(e) {
-          return card.name = e.target.value;
+          return card.title = e.target.value;
         },
-        placeholder: "card title"
-      }, card.name)]), m(".card-body", [m("textbox.panel-title", {
+        placeholder: "issue",
+        value: card.title
+      }), m("textarea.w3-input", {
         oninput: function oninput(e) {
-          return card.name = e.target.value;
+          return card.text = e.target.value;
         },
-        placeholder: "card title"
-      }, card.name)]), m(".card-footer")]);
+        placeholder: "text",
+        value: card.text
+      }));
     }
   };
 };
@@ -282,8 +290,6 @@ var _helpers = require("./helpers");
 
 var _ramda = require("ramda");
 
-var _index = require("@mithril-icons/clarity/cjs/index");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var drop = function drop(mdl) {
@@ -294,9 +300,9 @@ var drop = function drop(mdl) {
       if (!state.isSelected) {
         var cardId = mdl.state.dragging.cardId;
         var oldColId = mdl.state.dragging.oldColId;
-        var oldCol = mdl.state.project.cols.filter((0, _ramda.propEq)("id", oldColId))[0];
+        var oldCol = mdl.currentProject.cols.filter((0, _ramda.propEq)("id", oldColId))[0];
         oldCol.cards = (0, _ramda.without)([cardId], oldCol.cards);
-        var newCol = mdl.state.project.cols.filter((0, _ramda.propEq)("id", state.colId))[0];
+        var newCol = mdl.currentProject.cols.filter((0, _ramda.propEq)("id", state.colId))[0];
         newCol.cards.push(cardId);
         state.highlight = false;
         return mdl;
@@ -308,7 +314,7 @@ var drop = function drop(mdl) {
 var dragOver = function dragOver(mdl) {
   return function (state) {
     return function (evt) {
-      // let col = mdl.state.project.cols.filter(propEq("id", state.colId))[0]
+      // let col = mdl.currentProject.cols.filter(propEq("id", state.colId))[0]
       if (state.isSelected) {
         state.highlight = false;
       } else {
@@ -323,7 +329,7 @@ var dragOver = function dragOver(mdl) {
 var dragEnter = function dragEnter(mdl) {
   return function (state) {
     return function (evt) {
-      // state.highlight = true
+      state.highlight = true;
       evt.preventDefault();
       return true;
     };
@@ -368,9 +374,9 @@ var Column = function Column(_ref) {
   var addCard = function addCard(mdl) {
     return function (colId) {
       return function (id) {
-        return mdl.state.project.cols.filter((0, _ramda.propEq)("id", colId)).map(function (col) {
+        return mdl.currentProject.cols.filter((0, _ramda.propEq)("id", colId)).map(function (col) {
           var card = (0, _model.CARD)(id);
-          mdl.state.project.cards.push(card);
+          mdl.currentProject.cards.push(card);
           col.cards.push(card.id);
         });
       };
@@ -382,9 +388,10 @@ var Column = function Column(_ref) {
       var _ref2$attrs = _ref2.attrs,
           col = _ref2$attrs.col,
           mdl = _ref2$attrs.mdl;
-      return m(".w3-border w3-rest w3-cell", {
+      return m(".w3-border w3-cell w3-cell-row", {
         style: {
           minWidth: "300px",
+          width: "300px",
           height: "90vh"
         },
         id: col.id,
@@ -394,17 +401,17 @@ var Column = function Column(_ref) {
         ondragenter: dragEnter(mdl)(state),
         ondragend: dragEnd(mdl)(state),
         ondragleave: dragLeave(mdl)(state)
-      }, m(".w3-panel", col.name && m("p.w3-tag w3-border w3-white", col.name), m("p.w3-tag", col.id), m("button.w3-button w3-border w3-large w3-padding", {
+      }, m(".w3-panel w3-cell ", m(".w3-row-padding", m("input.w3-input.w3-col", {
+        oninput: function oninput(e) {
+          return col.title = e.target.value;
+        },
+        placeholder: "Ticket-Number",
+        value: col.title
+      }), m("button.w3-button w3-border w3-padding w3-col", {
         onclick: function onclick() {
           return addCard(mdl)(col.id)((0, _helpers.uuid)());
         }
-      }, "Add Card"), m(state.isSelected ? _index.PinSolid : _index.PinLine, state.togglePinSection), m("input.w3-input", {
-        oninput: function oninput(e) {
-          return col.name = e.target.value;
-        },
-        placeholder: "column title",
-        value: col.name
-      })), m(".w3-ul", col.cards.map(function (cardId, idx) {
+      }, "+"))), m(".w3-ul w3-hoverable w3-paddings", col.cards.map(function (cardId, idx) {
         return m(_card["default"], {
           key: idx,
           colId: col.id,
@@ -436,6 +443,7 @@ var addProject = function addProject(mdl, state) {
   var project = (0, _model.PROJ)((0, _helpers.uuid)());
   project.title = state.title;
   mdl.projects.push(project);
+  state.title = "";
   mdl.state.showModal = false;
 };
 
@@ -471,7 +479,9 @@ exports["default"] = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.uuid = exports.log = void 0;
+exports.uuid = exports.log = exports.findCurrentProject = void 0;
+
+var _ramda = require("ramda");
 
 var uuid = function uuid() {
   return "xxxxxxxx".replace(/[xy]/g, function (c) {
@@ -486,13 +496,19 @@ exports.uuid = uuid;
 var log = function log(m) {
   return function (v) {
     console.log(m, v);
-    v;
+    return v;
   };
 }; // const updateDropped = mdl => cardId => newColId =>
 // mdl.cols.filtet
 
 
 exports.log = log;
+
+var findCurrentProject = function findCurrentProject(mdl) {
+  return mdl.projects.find((0, _ramda.propEq)("id", mdl.state.projectId));
+};
+
+exports.findCurrentProject = findCurrentProject;
 });
 
 ;require.register("index.js", function(exports, require, module) {
@@ -599,7 +615,7 @@ var CARD = function CARD(id) {
   return {
     id: id,
     title: "",
-    description: ""
+    text: ""
   };
 };
 
@@ -642,10 +658,10 @@ var model = {
     },
     cols: [],
     cards: [],
-    project: null,
     showModal: false,
     modalContent: null
   },
+  currentProject: null,
   projects: [defaultProject()]
 };
 var _default = model;
@@ -660,9 +676,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _mithril = require("mithril");
+
+var _ramda = require("ramda");
+
 var _forms = _interopRequireDefault(require("./forms"));
 
+var _helpers = require("./helpers");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var selectProject = function selectProject(mdl, project) {
+  console.log(project);
+  mdl.state.projectId = project.id;
+  mdl.currentProject = (0, _helpers.findCurrentProject)(mdl);
+};
 
 var SideBar = function SideBar() {
   return {
@@ -670,24 +698,30 @@ var SideBar = function SideBar() {
       var _ref$attrs = _ref.attrs,
           mdl = _ref$attrs.mdl,
           state = _ref$attrs.state;
-      return m(".w3-sidebar#sidebar.w3-bar-block.w3-collapse.w3-card.w3-animate-left", {
+      return (0, _mithril.m)(".w3-sidebar#sidebar.w3-bar-block.w3-collapse.w3-card.w3-animate-left", {
         style: {
           width: "200px",
           display: state.sidebar.open ? "block" : "none"
         }
-      }, m("button.w3-bar-item.w3-button.w3-large.w3-hide-large", {
+      }, (0, _mithril.m)("button.w3-bar-item.w3-button.w3-large.w3-hide-large", {
         onclick: function onclick() {
           return state.toggleSideBar(state);
         }
-      }, "Close "), m("button", {
+      }, "Close "), (0, _mithril.m)("button", {
         onclick: function onclick() {
-          mdl.state.modalContent = m(_forms["default"], {
+          mdl.state.modalContent = (0, _mithril.m)(_forms["default"], {
             mdl: mdl
           });
           mdl.state.showModal = true;
         }
       }, "New Project"), mdl.projects.map(function (project) {
-        return m("button.w3-bar-item.w3-button", project.title);
+        return (0, _mithril.m)(".w3-right-align", (0, _mithril.m)("button.w3-bar-item.w3-button", {
+          onclick: function onclick() {
+            return selectProject(mdl, project);
+          }
+        }, project.title), !(0, _ramda.isEmpty)(project.cols) && (0, _mithril.m)("ul.w3-list", project.cols.map(function (col) {
+          return (0, _mithril.m)(".w3-list-item", col.title);
+        })));
       }));
     }
   };
@@ -715,21 +749,21 @@ var Toolbar = function Toolbar() {
       var _ref$attrs = _ref.attrs,
           mdl = _ref$attrs.mdl,
           state = _ref$attrs.state;
-      return m("nav.w3-bar.w3-container.w3-padding.w3-top", mdl.settings.profile != "desktop" && m("button.w3-button", {
+      return m("nav.w3-bar.w3-container.w3-padding", m("button.w3-button.w3-hide-large", {
         onclick: function onclick() {
           return state.toggleSideBar(state);
         }
-      }, "MENU"), m("hr"), m(".w3-row", m(".w3-half", m("input.w3-bar-item w3-input w3-xxlarge w3-border-bottom", {
+      }, "MENU"), m("hr"), m(".w3-row", m("input.w3-input w3-border-bottom w3-col m6", {
         oninput: function oninput(e) {
-          return mdl.state.project.title = e.target.value;
+          return mdl.currentProject.title = e.target.value;
         },
         placeholder: "project title",
-        value: mdl.state.project.title
-      })), m(".w3-half", m("button. w3-button w3-bar-item w3-border w3-large", {
+        value: mdl.currentProject.title
+      }), m("button. w3-button  w3-border w3-large w3-col m1", {
         onclick: function onclick() {
-          return mdl.state.project.cols.push((0, _model.COL)((0, _helpers.uuid)()));
+          return mdl.currentProject.cols.push((0, _model.COL)((0, _helpers.uuid)()));
         }
-      }, "Add Column"))));
+      }, "+")));
     }
   };
 };

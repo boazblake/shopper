@@ -1,6 +1,6 @@
 import { uuid } from "./helpers"
 
-export const CARD = (id) => ({ id, title: "", description: "" })
+export const CARD = (id) => ({ id, title: "", text: "" })
 export const COL = (id) => ({ id, title: "", cards: [], isSelected: false })
 export const PROJ = (id) => ({ id, title: "", cols: [], cards: [] })
 
@@ -19,10 +19,10 @@ const model = {
     },
     cols: [],
     cards: [],
-    project: null,
     showModal: false,
     modalContent: null,
   },
+  currentProject: null,
   projects: [defaultProject()],
 }
 export default model

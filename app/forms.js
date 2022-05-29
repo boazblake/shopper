@@ -5,6 +5,7 @@ const addProject = (mdl, state) => {
   let project = PROJ(uuid())
   project.title = state.title
   mdl.projects.push(project)
+  state.title = ""
   mdl.state.showModal = false
 }
 

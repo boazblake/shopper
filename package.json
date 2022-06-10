@@ -4,39 +4,24 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf ./docs && rm -rf ./node_modules",
-    "clean-start": "rm -rf docs && yarn run start",
+    "clean": "rm -rf ./dist && rm -rf ./node_modules",
+    "clean-start": "rm -rf dist && yarn run start",
     "fresh": "yarn run clean && yarn install && yarn run start",
-    "debug": "export LOGGY_STACKS=1 && yarn run start",
-    "start": "brunch watch --server",
-    "strip-comments": "babel src/ -d docs/",
-    "build:pre": "rm -rf docs; yarn run strip-comments",
-    "build": "yarn run build:pre && brunch build --production"
+    "start": "vite",
+    "build": "yarn run build:pre && vite build",
+    "preview": "vite preview",
+    "build:pre": "rm -rf dist"
   },
   "dependencies": {
-    "@babel/cli": "^7.13.10",
-    "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@babel/preset-flow": "^7.12.13",
-    "@mithril-icons/clarity": "^1.2.0",
-    "@types/node": "^14.14.33",
-    "classnames": "^2.3.1",
+    "@bunchtogether/vite-plugin-flow": "^1.0.2",
+    "data.task": "^3.1.2",
+    "flow-remove-types": "^2.179.0",
     "interactjs": "^1.9.10",
     "mithril": "^2.2.0",
     "mithril-stream": "^2.0.0",
-    "ramda": "^0.27.0",
-    "spectre.css": "^0.5.8"
+    "ramda": "^0.27.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-spread": "^7.7.4",
-    "auto-reload-brunch": "^2.7.1",
-    "babel-brunch": "7.0.1",
-    "brunch": "^2.10.17",
-    "clean-css-brunch": "^2.10.0",
-    "copycat-brunch": "^1.1.1",
-    "imagemin-brunch": "^1.1.0",
-    "sass-brunch": "https://github.com/brunch/sass-brunch.git#b21b27f6329c2ec30659daa0835db214dde708b0",
-    "sw-precache-brunch": "^2.0.1",
-    "uglify-js-brunch": "^2.10.0"
+    "vite": "^2.6.2"
   }
 }

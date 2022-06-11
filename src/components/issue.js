@@ -1,9 +1,19 @@
 import m from "mithril"
-import { propEq } from "ramda"
+import { load } from "../model"
 
 const drag = (mdl) => (issue) => (evt) => {
   mdl.state.dragging.issue = issue
   mdl.state.dragging.oldTicketId = issue.ticketId
+}
+
+const updateIssue = (mdl, issue) => {
+  const onSuccess = (data) => {
+    console.log("updated issue", data)
+    load(mdl)
+  }
+  mdl.http
+    .putTask(mdl, `issues/${issue.id}`, issue)
+    .fork(log("error"), onSuccess)
 }
 
 const Issue = () => {
@@ -14,11 +24,13 @@ const Issue = () => {
         { id: issue.id, draggable: true, ondragstart: drag(mdl)(issue) },
         m("input.w3-input", {
           oninput: (e) => (issue.title = e.target.value),
+          onfocusout: (e) => updateIssue(mdl, issue),
           placeholder: "issue",
           value: issue.title,
         }),
         m("textarea.w3-input", {
           oninput: (e) => (issue.text = e.target.value),
+          onfocusout: (e) => updateIssue(mdl, issue),
           placeholder: "text",
           value: issue.text,
         })

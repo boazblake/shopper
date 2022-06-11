@@ -9,6 +9,8 @@ const uuid = () => {
   })
 }
 
+const range = (size) => [...Array(size).keys()]
+
 const log = (m) => (v) => {
   console.log(m, v)
   return v
@@ -36,5 +38,5 @@ const toDto = (mdl) => ({
   },
 })
 
-export { uuid, log, shortName }
+export { uuid, log, shortName, range }
 

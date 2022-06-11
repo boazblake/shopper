@@ -14,12 +14,8 @@ const Modal = ({ attrs: { mdl } }) => {
           style: { display: mdl.state.showModal ? "block" : "none" },
         },
         m(
-          ".w3-Modal.content w3-card",
-          m(
-            "w3-container",
-
-            mdl.state.modalContent
-          )
+          "dialoge.w3-Modal.content w3-card",
+          m(".w3-container", mdl.state.modalContent)
         )
       ),
   }

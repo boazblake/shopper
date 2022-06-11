@@ -12,18 +12,24 @@ export const load = (mdl) => {
   const getIssuesTask = (mdl) => mdl.http.getTask(mdl, "issues")
 
   const toViewModel = ({ projects, tickets, issues }) => {
-    let sortedTickets = tickets.map((ticket) => {
-      ticket.issues = issues.filter(propEq("ticketId", ticket.id))
-      return ticket
-    })
+    let sortedTickets = tickets
+      .map((ticket) => {
+        ticket.issues = issues
+          .filter(propEq("ticketId", ticket.id))
+          .sort((a, b) => a.order - b.order)
+        return ticket
+      })
+      .sort((a, b) => a.order - b.order)
 
     return {
       tickets: sortedTickets,
       projects: projects.map((project) => {
-        project.tickets = sortedTickets.filter(propEq("projectId", project.id))
+        project.tickets = sortedTickets
+          .filter(propEq("projectId", project.id))
+          .sort((a, b) => a.order - b.order)
         return project
       }),
-      issues,
+      issues: issues,
     }
   }
 
@@ -32,7 +38,6 @@ export const load = (mdl) => {
     mdl.tickets = tickets
     mdl.issues = issues
     mdl.currentProject = loadProject(mdl)
-    console.log("loaded", mdl)
   }
 
   Task.of(
@@ -45,51 +50,25 @@ export const load = (mdl) => {
     .fork(log("error"), onSuccess)
 }
 
-export const ISSUE = (ticketId) => ({
+export const ISSUE = (ticketId, order = 0) => ({
   id: uuid(),
   title: "",
   text: "",
   ticketId,
+  order,
 })
-export const TICKET = (title, projectId) => ({
+export const TICKET = (title, projectId, order = 0) => ({
   id: uuid(),
   title,
+  order,
   projectId,
   isSelected: false,
 })
-export const PROJECT = (title = "default") => ({
+export const PROJECT = (title, order = 0) => ({
   title,
   id: uuid(),
+  order,
 })
-
-// const defaultProject = () => PROJECT()
-
-// const createDefaultProjectTask = (mdl, project) =>
-//   mdl.http.postTask(mdl, "projects", project)
-
-// const checkForProjectsTask = (mdl) => (xs) =>
-//   isEmpty(xs) ? createDefaultProjectTask(mdl, defaultProject()) : Task.of(xs)
-
-// const getTicketsByProjectId = (mdl) => (id) => mdl.http.getTask(mdl, "tickets")
-
-// const checkForTicketsTask = (mdl) => (projects) => {
-//   mdl.projects = projects
-//   let projectIds = pluck("id", projects)
-//   return traverse(Task.of, getTicketsByProjectId(mdl), projectIds)
-// }
-
-// const checkForIssuesTask = (mdl) => (projects) => {
-//   mdl.projects = projects
-//   let projectIds = pluck("id", projects)
-//   return traverse(Task.of, getTicketsByProjectId(mdl), projectIds)
-// }
-
-// export const initDBTask = (mdl) =>
-//   mdl.http
-//     .getTask(mdl, "projects")
-//     .chain(checkForProjectsTask(mdl))
-//     .chain(checkForTicketsTask(mdl))
-//     .chain(checkForIssuesTask(mdl))
 
 const model = {
   state: {},

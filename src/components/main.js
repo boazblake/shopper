@@ -1,6 +1,7 @@
 import m from "mithril"
 import Ticket from "./ticket"
 import { NewProjectForm } from "./forms"
+import { prop } from "ramda"
 
 const Main = () => {
   return {
@@ -9,9 +10,9 @@ const Main = () => {
         "article.w3-row w3-ul",
         { style: { height: "90vh", overflow: "auto" } },
         mdl.currentProject
-          ? mdl.currentProject.tickets.map((ticket, key) =>
-              m(Ticket, { key, ticket, mdl })
-            )
+          ? mdl.currentProject.tickets
+              .sort(prop("order"))
+              .map((ticket, key) => m(Ticket, { key, ticket, mdl }))
           : m(
               "",
               m(

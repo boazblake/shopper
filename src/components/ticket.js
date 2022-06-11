@@ -2,32 +2,30 @@ import m from "mithril"
 import Issue from "./issue"
 import { ISSUE, load } from "../model"
 import { uuid } from "../helpers"
-import { head, propEq, without } from "ramda"
+import { head, propEq, pluck, filter, compose, reduce, max } from "ramda"
 
 const drop = (mdl) => (state) => (evt) => {
   evt.preventDefault()
   if (!state.isSelected) {
+    let order = compose(
+      reduce(max, 0),
+      pluck("order"),
+      filter(propEq("ticketId", state.ticketId))
+    )(mdl.issues)
     let issue = mdl.state.dragging.issue
+    console.log("issues", order, issue, state)
+    // if ((issue.ticketId = state.ticketId)) {
+    // }
     issue.ticketId = state.ticketId
-
+    issue.order = order
     const onSuccess = (data) => {
       load(mdl)
       state.highlight = false
     }
 
-    mdl.http.putTask(mdl, "issues", issue).fork(log("error"), onSuccess)
-
-    // let oldTicketId = mdl.state.dragging.ticketId
-
-    // let oldTicket = mdl.currentProject.tickets.filter(
-    //   propEq("id", oldTicketId)
-    // )[0]
-    // oldTicket.issues = oldTicket.issues.filter((i) => i.id !== issueId)
-    // let newTicket = mdl.currentProject.tickets.filter(
-    //   propEq("id", state.ticketId)
-    // )[0]
-    // console.log(newTicket, oldTicket, state)
-    // newTicket.issues.push(issueId)
+    mdl.http
+      .putTask(mdl, `issues/${issue.id}`, issue)
+      .fork(log("error"), onSuccess)
 
     return mdl
   }
@@ -84,7 +82,7 @@ const Ticket = ({ attrs: { mdl, ticket } }) => {
     mdl.http.postTask(mdl, "issues", issue).fork(log("error"), onSuccess)
   }
 
-  const updateTicket = (mdl) => {
+  const updateTicket = (mdl, ticket) => {
     const onSuccess = (data) => {
       console.log("update project", data)
       load(mdl)
@@ -114,6 +112,7 @@ const Ticket = ({ attrs: { mdl, ticket } }) => {
           m(
             ".w3-row-padding",
             m("input.w3-input.w3-col.w3-large.w3-padding", {
+              onfocusout: () => updateTicket(mdl, ticket),
               oninput: (e) => (ticket.title = e.target.value),
               placeholder: "Ticket-Number",
               value: ticket.title,

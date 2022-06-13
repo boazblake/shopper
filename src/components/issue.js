@@ -20,7 +20,7 @@ const Issue = () => {
   return {
     view: ({ attrs: { issue, mdl } }) => {
       return m(
-        "li.w3-list-itemw3-leftbar w3-leftbar ",
+        "li.w3-list-item.w3-leftbar w3-border-orange.w3-hover-orange",
         { id: issue.id, draggable: true, ondragstart: drag(mdl)(issue) },
         m("input.w3-input", {
           oninput: (e) => (issue.title = e.target.value),

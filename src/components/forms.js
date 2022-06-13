@@ -35,7 +35,7 @@ const NewProjectForm = () => {
           })
         ),
         m(
-          "button.w3-button.w3-block.w3-green.w3-section.w3-padding",
+          "button.w3-button.w3-block.w3-orange.w3-section.w3-padding",
           { onclick: () => addProject(mdl, state) },
           "add"
         )

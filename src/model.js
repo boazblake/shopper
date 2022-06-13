@@ -62,7 +62,6 @@ export const TICKET = (title, projectId, order = 0) => ({
   title,
   order,
   projectId,
-  isSelected: false,
 })
 export const PROJECT = (title, order = 0) => ({
   title,

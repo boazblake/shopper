@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== "production") {
 // set display profiles
 const getProfile = (w) => {
   if (w <= 411) return "phone"
-  if (w <= 1000) return "tablet"
+  if (w <= 990) return "tablet"
   return "desktop"
 }
 

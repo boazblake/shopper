@@ -93,13 +93,14 @@ const Ticket = ({ attrs: { mdl, ticket } }) => {
   }
 
   return {
-    view: ({ attrs: { ticket, mdl } }) =>
+    view: ({ attrs: { ticket, mdl, key } }) =>
       m(
-        ".w3-border w3-cell w3-cell-row",
+        "section.w3-section.w3-border-top.w3-border-left.w3-cell w3-cell-row.w3-row-padding",
         {
+          key,
           style: { minWidth: "300px", width: "300px", height: "90vh" },
           id: ticket.id,
-          class: state.highlight ? "highlight-col" : "",
+          class: state.highlight ? "w3-orange" : "",
           ondrop: drop(mdl)(state),
           ondragover: dragOver(mdl)(state),
           ondragenter: dragEnter(mdl)(state),
@@ -124,11 +125,12 @@ const Ticket = ({ attrs: { mdl, ticket } }) => {
             )
           )
         ),
+
         m(
-          ".w3-ul w3-hoverable w3-paddings",
+          ".w3-ul w3-paddings",
           head(
             mdl.currentProject.tickets.filter(propEq("id", ticket.id))
-          ).issues.map((issue, idx) => m(Issue, { key: idx, issue, mdl }))
+          ).issues.map((issue, idx) => m(Issue, { key: issue.id, issue, mdl }))
         )
       ),
   }

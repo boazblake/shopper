@@ -29,7 +29,7 @@ const Toolbar = () => {
       return m(
         "nav.w3-bar.w3-container.w3-padding.w3-fixed",
         m(
-          "button.w3-button.w3-hide-large",
+          "button.w3-button.w3-hide-large.w3-border",
           { onclick: () => state.toggleSideBar(state) },
           "MENU"
         ),

@@ -32,7 +32,7 @@ const SideBar = () => {
         ".w3-sidebar#sidebar.w3-bar-block.w3-collapse.w3-card.w3-animate-left",
         {
           style: {
-            width: "200px",
+            width: "300px",
             display: state.sidebar.open ? "block" : "none",
           },
         },

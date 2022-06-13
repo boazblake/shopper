@@ -1,7 +1,7 @@
 import Task from "data.task"
 import m from "mithril"
 
-const baseUrl = process.env.API_URL
+const baseUrl = `${process.env.API_URL}/`
 
 const headers = {
   "Content-Type": "application/json",

@@ -6,35 +6,12 @@ import Modal from "./components/modal"
 import { load } from "./model"
 import Stream from "mithril-stream"
 
-const moveRight = (state, mdl) =>
-  ["desktop", "tablet"].includes(mdl.settings.profile)
-    ? "move-right"
-    : state.sidebar.open
-    ? "move-right"
-    : ""
+
 
 const App = (mdl) => {
   const state = {
     sidebar: { open: false },
     setTicket: Stream(null),
-    observe: Stream(null),
-    //   (dom, state) => {
-    //   return Stream(dom)
-    //   // const observer = new MutationObserver(([{ target }]) => {
-    //   //   console.log(
-    //   //     target.id,
-    //   //     state.setTicket(),
-    //   //     target.id == state.setTicket()
-    //   //   )
-    //   //   target.id == state.setTicket() &&
-    //   //     target.scrollIntoView(state.setTicket())
-    //   // })
-    //   // observer.observe(dom, {
-    //   //   childList: true,
-    //   //   subtree: true,
-    //   // })
-    //   // return observer
-    // },
     toggleSideBar: (state) => (state.sidebar.open = !state.sidebar.open),
   }
   load(mdl)
@@ -47,10 +24,9 @@ const App = (mdl) => {
         m(SideBar, { mdl, state }),
 
         m(
-          "section.w3-main#main",
+          "section.#main",
           {
-            style: { height: "100vh", overflow: "hidden" },
-            class: moveRight(state, mdl),
+            style: { height: "100vh", overflow: "hidden", marginLeft: mdl.settings.profile == 'desktop' || state.sidebar.open ? '300px' : '0' },
           },
           m(Toolbar, { mdl, state }),
           m(Main, { mdl, state })

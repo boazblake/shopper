@@ -3,67 +3,88 @@ import http from "./http"
 import { log, uuid } from "./helpers"
 import { propEq } from "ramda"
 
-export const loadProject = (mdl) =>
-  mdl.projects.find(propEq("id", mdl.currentProject?.id)) || mdl.projects[0]
+
+export const units = [
+  'Of Them',
+  'Boxe(s)',
+  'Can(s)',
+  'gram(s)',
+  'kilogram(s)',
+  'pound(s)',
+  'liter(s)',
+  'mliter(s)',
+  'ounce(s)'
+]
+
+export const loadStore = (mdl) =>
+  mdl.stores.find(propEq("id", mdl.currentStore?.id)) || mdl.stores[0]
 
 export const load = (mdl) => {
-  const getProjectsTask = (mdl) => mdl.http.getTask(mdl, "projects")
-  const getTicketsTask = (mdl) => mdl.http.getTask(mdl, "tickets")
-  const getIssuesTask = (mdl) => mdl.http.getTask(mdl, "issues")
+  const getStoresTask = (mdl) => mdl.http.getTask(mdl, "stores")
+  const getCatsTask = (mdl) => mdl.http.getTask(mdl, "cats")
+  const getItemsTask = (mdl) => mdl.http.getTask(mdl, "items")
 
-  const toViewModel = ({ projects, tickets, issues }) => {
-    let sortedTickets = tickets
-      .map((ticket) => {
-        ticket.issues = issues
-          .filter(propEq("ticketId", ticket.id))
+  const toViewModel = ({ stores, cats, items }) => {
+    let sortedCats = cats
+      .map((cat) => {
+        cat.items = items
+          .filter(propEq("catId", cat.id))
           .sort((a, b) => a.order - b.order)
-        return ticket
+          .reverse()
+        return cat
       })
       .sort((a, b) => a.order - b.order)
 
     return {
-      tickets: sortedTickets,
-      projects: projects.map((project) => {
-        project.tickets = sortedTickets
-          .filter(propEq("projectId", project.id))
+      cats: sortedCats,
+      stores: stores.map((store) => {
+        store.cats = sortedCats
+          .filter(propEq("storeId", store.id))
           .sort((a, b) => a.order - b.order)
-        return project
+        return store
       }),
-      issues: issues,
+      items: items,
     }
   }
 
-  const onSuccess = ({ projects, tickets, issues }) => {
-    mdl.projects = projects
-    mdl.tickets = tickets
-    mdl.issues = issues
-    mdl.currentProject = loadProject(mdl)
+  const onSuccess = ({ stores, cats, items }) => {
+    mdl.stores = stores
+    mdl.cats = cats
+    mdl.items = items.reverse()
+    mdl.currentStore = loadStore(mdl)
   }
 
   Task.of(
-    (projects) => (tickets) => (issues) =>
-      toViewModel({ projects, tickets, issues })
+    (stores) => (cats) => (items) =>
+      toViewModel({ stores, cats, items })
   )
-    .ap(getProjectsTask(mdl))
-    .ap(getTicketsTask(mdl))
-    .ap(getIssuesTask(mdl))
+    .ap(getStoresTask(mdl))
+    .ap(getCatsTask(mdl))
+    .ap(getItemsTask(mdl))
     .fork(log("error"), onSuccess)
 }
 
-export const ISSUE = (ticketId, order = 0) => ({
+export const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => ({
   id: uuid(),
-  title: "",
-  text: "",
-  ticketId,
+  title,
+  notes,
+  catId,
   order,
+  quantity,
+  unit,
+  price,
+  notes,
+  purchased: false,
 })
-export const TICKET = (title, projectId, order = 0) => ({
+export const CAT = (title, storeId, order = 0) => ({
   id: uuid(),
   title,
   order,
-  projectId,
+  storeId,
+  collapsed: false,
+  dragCollapsed: false
 })
-export const PROJECT = (title, order = 0) => ({
+export const STORE = (title, order = 0) => ({
   title,
   id: uuid(),
   order,
@@ -75,18 +96,18 @@ const model = {
   settings: {},
   state: {
     dragging: {
-      oldTicketId: "",
-      issueId: "",
+      item: "",
+      swapItem: "",
     },
-    ticketIds: [],
-    issues: [],
+    catIds: [],
+    items: [],
     showModal: false,
     modalContent: null,
   },
-  projects: [],
-  tickets: [],
-  issues: [],
-  currentProject: null,
+  stores: [],
+  cats: [],
+  items: [],
+  currentStore: null,
 }
 export default model
 

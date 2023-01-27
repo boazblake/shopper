@@ -38,6 +38,11 @@ data.task@^3.1.2:
   resolved "https://registry.yarnpkg.com/data.task/-/data.task-3.1.2.tgz#f61511339ad5c5ac6f417cc2666b95153dc7448d"
   integrity sha512-gGDjno8m/FS1kdMU3EmKcLaO1enFyfCV/EscvDZ4+KZDSg9xHePa2VFfWd+QO5PUp18NdCIziOpaSUE4Efw8/w==
 
+dragsterjs@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/dragsterjs/-/dragsterjs-1.6.2.tgz#c116adfcd3141a86b22fb88a7e4faf7f832b0e8f"
+  integrity sha512-I0I6QvtNIv6zF5/GclbinBCeZE8XDF7rra64wpNc+TvxkTEPicEBiyC//Sb2jYUpOgsQiR8+YgnZ4f5vqK26ig==
+
 esbuild-android-64@0.14.42:
   version "0.14.42"
   resolved "https://registry.yarnpkg.com/esbuild-android-64/-/esbuild-android-64-0.14.42.tgz#d7ab3d44d3671218d22bce52f65642b12908d954"
@@ -345,6 +350,11 @@ rollup@^2.59.0:
   integrity sha512-zD73rq3Fanr/spmiybMqmGEvOpryj/heLqOb+lubxiXlo8azeJ/z306T2dJYuzfWZPQBS0OT++GXG6Lbd4ToKw==
   optionalDependencies:
     fsevents "~2.3.2"
+
+sortablejs@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
+  integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
 
 source-map-js@^1.0.2:
   version "1.0.2"

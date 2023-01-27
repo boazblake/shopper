@@ -5,3 +5,23 @@
 .pointer {
   cursor: pointer;
 }
+
+/*
+ * Prevents user from selecting text
+ * in the draggable elements
+ */
+[draggable] {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+/*
+ * Prevent the element currently being dragged from
+ * receive pointer events, otherwise the dropping
+ * zone behind it can't receive the hover mouse events.
+ */
+.dragster-temp {
+  pointer-events: none;
+}

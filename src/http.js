@@ -1,7 +1,7 @@
 import Task from "data.task"
 import m from "mithril"
 
-const baseUrl = "https://boazblake-trello-rqcnrtrbjd90.deno.dev/"
+const baseUrl = "http://localhost:8000/"
 
 const headers = {
   "Content-Type": "application/json",

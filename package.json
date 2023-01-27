@@ -16,7 +16,6 @@
     "@bunchtogether/vite-plugin-flow": "^1.0.2",
     "data.task": "^3.1.2",
     "flow-remove-types": "^2.179.0",
-    "interactjs": "^1.9.10",
     "mithril": "^2.2.0",
     "mithril-stream": "^2.0.0",
     "ramda": "^0.27.0"

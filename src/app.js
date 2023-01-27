@@ -5,13 +5,22 @@ import Main from "./components/main"
 import Modal from "./components/modal"
 import { load } from "./model"
 import Stream from "mithril-stream"
+import Dragster from 'dragsterjs'
 
+
+
+const mainStyle = mdl => ({
+  maxHeight: "100dvh",
+  overflow: "hidden",
+  marginLeft: mdl.settings.profile == 'desktop' ? '300px' : '0'
+})
 
 
 const App = (mdl) => {
+  Dragster()
   const state = {
     sidebar: { open: false },
-    setTicket: Stream(null),
+    setCat: Stream(null),
     toggleSideBar: (state) => (state.sidebar.open = !state.sidebar.open),
   }
   load(mdl)
@@ -26,7 +35,7 @@ const App = (mdl) => {
         m(
           "section.#main",
           {
-            style: { height: "100vh", overflow: "hidden", marginLeft: mdl.settings.profile == 'desktop' || state.sidebar.open ? '300px' : '0' },
+            style: mainStyle(mdl),
           },
           m(Toolbar, { mdl, state }),
           m(Main, { mdl, state })

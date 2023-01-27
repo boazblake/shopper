@@ -1,25 +1,16 @@
 import m from "mithril"
-import { load, TICKET } from "../model"
-import { shortName, uuid } from "../helpers"
+import { load } from "../model"
+import { NewItemForm } from './forms'
 
-const addTicket = (mdl, state) => {
-  const ticket = TICKET(shortName(mdl), mdl.currentProject.id)
-  const onError = log("error")
-  const onSuccess = (data) => {
-    load(mdl)
-    // console.log("success", data)
-    // mdl.currentProject.tickets.push(ticket)
-  }
-  mdl.http.postTask(mdl, "tickets", ticket).fork(onError, onSuccess)
-}
 
-const updateProject = (mdl) => {
+
+const updateStore = (mdl) => {
   const onSuccess = (data) => {
-    console.log("update project", data)
+    console.log("update store", data)
     load(mdl)
   }
   mdl.http
-    .putTask(mdl, `projects/${mdl.currentProject.id}`, mdl.currentProject)
+    .putTask(mdl, `stores/${mdl.currentStore.id}`, mdl.currentStore)
     .fork(log("error"), onSuccess)
 }
 
@@ -33,29 +24,27 @@ const Toolbar = () => {
           { onclick: () => state.toggleSideBar(state) },
           "MENU"
         ),
-        mdl.currentProject &&
+        mdl.currentStore &&
+        m(
+          ".w3-row w3-section",
           m(
-            ".w3-row w3-section",
+            ".m6 w3-left",
+            m("h1.w3-title w3-col", mdl.currentStore.title)
+          ),
+          m(
+            ".m3 w3-right",
             m(
-              ".m6 w3-left",
-              m("input.w3-input w3-border-bottom w3-col", {
-                oninput: (e) => (mdl.currentProject.title = e.target.value),
-                placeholder: "project title",
-                value: mdl.currentProject.title,
-                onfocusout: () => updateProject(mdl),
-              })
-            ),
-            m(
-              ".m3 w3-right",
-              m(
-                "button. w3-button  w3-border w3-large w3-col",
-                {
-                  onclick: () => addTicket(mdl, state),
+              "button. w3-button  w3-border w3-large w3-col",
+              {
+                onclick: () => {
+                  mdl.state.modalContent = m(NewItemForm, { mdl, catId: null, })
+                  mdl.state.showModal = true
                 },
-                "Add Ticket"
-              )
+              },
+              "Add Item"
             )
           )
+        )
       )
     },
   }

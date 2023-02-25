@@ -30,7 +30,7 @@ const NewStoreForm = () => {
           "div.w3-section",
           m("label", m("b", "Store Title")),
           m("input.w3-input.w3-border-bottom", {
-            oncreate: ({ dom }) => dom.focus(),
+            oncreate: ({ dom }) => { dom.select(); dom.focus() },
             type: "text",
             value: state.title,
             oninput: (e) => (state.title = e.target.value),
@@ -73,7 +73,7 @@ const NewCatForm = () => {
           "div.w3-section",
           m("label", m("b", "Category Title")),
           m("input.w3-input.w3-border-bottom", {
-            oncreate: ({ dom }) => dom.focus(),
+            oncreate: ({ dom }) => { dom.select(); dom.focus() },
             type: "text",
             value: state.title,
             oninput: (e) => (state.title = e.target.value),
@@ -142,7 +142,7 @@ const NewItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
         "div.w3-section",
         m("label", m("b", "Title")),
         m("input.w3-input.w3-border-bottom", {
-          oncreate: ({ dom }) => dom.focus(),
+          oncreate: ({ dom }) => { dom.select(); dom.focus() },
           type: "text",
           value: state.title,
           oninput: (e) => (state.title = e.target.value),

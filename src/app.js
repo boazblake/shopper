@@ -5,7 +5,6 @@ import Main from "./components/main"
 import Modal from "./components/modal"
 import { load } from "./model"
 import Stream from "mithril-stream"
-import Dragster from 'dragsterjs'
 
 
 
@@ -17,7 +16,6 @@ const mainStyle = mdl => ({
 
 
 const App = (mdl) => {
-  Dragster()
   const state = {
     sidebar: { open: false },
     setCat: Stream(null),
@@ -27,7 +25,7 @@ const App = (mdl) => {
   return {
     view: () => {
       return m(
-        "section.w3-theme",
+        "page.w3-theme",
         m(Modal, { mdl }),
 
         m(SideBar, { mdl, state }),

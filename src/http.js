@@ -1,8 +1,8 @@
 import Task from "data.task"
 import m from "mithril"
 
-const baseUrl = "https://shopper.deno.dev/"// "http://localhost:8000/"
-
+const baseUrl = "http://localhost:8000/"
+//"https://shopper.deno.dev/"
 const headers = {
   "Content-Type": "application/json",
 }

@@ -30,16 +30,16 @@ const Cat = ({ attrs: { mdl, cat } }) => {
               backgroundColor: 'white',
             }
           },
-          m("h3.w3-left", cat.title),
+          m("p.w3-right", cat.title.toUpperCase()),
           m(
-            "button.w3-button w3-border w3-padding.w3-right",
+            "button.w3-btn w3-border-none w3-padding.w3-left",
             {
               onclick: () => {
                 mdl.state.modalContent = m(NewItemForm, { mdl, catId: cat.id })
                 mdl.state.showModal = true
               }
             },
-            "Add Item"
+            "+"
           )
         ),
 

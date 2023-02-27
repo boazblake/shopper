@@ -51,6 +51,23 @@ const dragEnd = (mdl, state, item) => (evt) => {
   return true
 }
 
+const handleSwipe = (e) => {
+  // define the minimum distance to trigger the action
+  const minDistance = 80;
+  const container = document.querySelector('.swipe-container');
+  const output = document.querySelector('.output');
+  // get the distance the user swiped
+  const swipeDistance = container.scrollLeft - container.clientWidth;
+  if (swipeDistance < minDistance * -1) {
+    console.log('lrft', e)
+  } else if (swipeDistance > minDistance) {
+    console.log('right', e)
+  } else {
+    console.log('nothing', e)
+    output.innerHTML = `did not swipe ${minDistance}px`;
+  }
+}
+
 const Item = () => {
   const state = {
     highlight: false,
@@ -71,24 +88,36 @@ const Item = () => {
           ondragleave: dragLeave(state, item),
           ondragstart: () => mdl.state.dragging.item = item,
         },
-        m('.w3-bar',
-          item.img && m("img.w3-bar-item.w3-circle", { src: item.img, style: { width: '85px' } }),
-          m("p.w3-bar-item", item.title),
-          m('button.w3-button w3-border.w3-right', {
-            onclick: () => deleteItem(mdl, item.id)
-          }, 'Delete'),
-          m('button.w3-button w3-border.w3-right', {
-            onmousedown: () => state.draggable = true,
-            ontouchstart: () => state.draggable = true,
-            onmouseup: () => state.draggable = false,
-            ontouchend: () => state.draggable = false,
-          }, 'Move'),
-          m('button.w3-button w3-border.w3-right', {
-            onclick: () => {
-              mdl.state.showModal = true
-              mdl.state.modalContent = m(NewItemForm, { catId: item.catId, mdl, item, isEdit: true })
-            }
-          }, 'Edit')
+        m('.w3-bar.swipe-container', {
+          ontouchend: handleSwipe,
+        },
+
+          m('.swipe-action.swipe-left',
+            m('button.w3-button w3-border.w3-right', {
+              onclick: () => {
+                mdl.state.showModal = true
+                mdl.state.modalContent = m(NewItemForm, { catId: item.catId, mdl, item, isEdit: true })
+              }
+            }, 'Edit')
+          ),
+
+          m('.swipe-element',
+            item.img && m("img.w3-bar-item.w3-circle", { src: item.img, style: { width: '85px' } }),
+            m("h4.w3-bar-item", item.title)),
+
+
+          m('.swipe-action.swipe-right',
+            m('button.w3-button w3-border.w3-right', {
+              onclick: () => deleteItem(mdl, item.id)
+            }, 'Delete')
+          ),
+          // m('button.w3-button w3-border.w3-right', {
+          //   onmousedown: () => state.draggable = true,
+          //   ontouchstart: () => state.draggable = true,
+          //   onmouseup: () => state.draggable = false,
+          //   ontouchend: () => state.draggable = false,
+          // }, 'Move'),
+
         ),
         m('.w3-bar', item.quantity > 1 && m("p.w3-p", `${item.quantity} ${item.unit}`),)
 

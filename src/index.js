@@ -1,6 +1,7 @@
 import m from "mithril"
 import "./styles/app.css"
 import "./styles/w3-styles.css"
+import "./styles/swipe.css"
 import App from "./app.js"
 import model from "./model.js"
 

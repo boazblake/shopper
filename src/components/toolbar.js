@@ -41,7 +41,7 @@ const Toolbar = () => {
                   mdl.state.showModal = true
                 },
               },
-              "Add Item"
+              "+"
             )
           )
         )

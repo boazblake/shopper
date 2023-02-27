@@ -1,5 +1,4 @@
-import { isEmpty, head } from "ramda"
-import { map, prop, propEq } from "ramda"
+import { propEq } from "ramda"
 
 const uuid = () => {
   return "xxxxxxxx".replace(/[xy]/g, function (c) {

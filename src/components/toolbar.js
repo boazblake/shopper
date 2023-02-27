@@ -1,6 +1,6 @@
 import m from "mithril"
 import { load } from "../model"
-import { NewItemForm } from './forms'
+import { ItemForm } from './forms'
 
 
 
@@ -37,7 +37,7 @@ const Toolbar = () => {
               "button. w3-button  w3-border w3-large w3-col",
               {
                 onclick: () => {
-                  mdl.state.modalContent = m(NewItemForm, { mdl, catId: null, })
+                  mdl.state.modalContent = m(ItemForm, { mdl, catId: null, })
                   mdl.state.showModal = true
                 },
               },

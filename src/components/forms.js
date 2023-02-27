@@ -16,7 +16,7 @@ const addStore = (mdl, state) => {
   mdl.http.postTask(mdl, "stores", store).fork(onError, onSuccess)
 }
 
-const NewStoreForm = () => {
+const StoreForm = () => {
   const state = {
     title: "",
   }
@@ -59,7 +59,7 @@ const addCat = (mdl, state) => {
 }
 
 
-const NewCatForm = () => {
+const CatForm = () => {
   const state = {
     title: "",
   }
@@ -109,7 +109,7 @@ const addOrUpdateItem = (mdl, state, isEdit) => {
     fork(log("error"), onSuccess)
 }
 
-const NewItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
+const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
   const state = {
     catId,
     catTitle: '',
@@ -190,10 +190,10 @@ const NewItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
       m(
         "button.w3-button.w3-block.w3-orange.w3-section.w3-padding",
         { onclick: () => addOrUpdateItem(mdl, state, isEdit) },
-        "add"
+        isEdit ? "Update" : "Add"
       )
     )
   }
 }
-export { NewStoreForm, NewCatForm, NewItemForm }
+export { StoreForm, CatForm, ItemForm }
 

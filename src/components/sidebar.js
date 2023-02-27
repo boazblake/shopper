@@ -1,7 +1,7 @@
 import m from "mithril"
 import { isEmpty } from "ramda"
 import { load, loadStore } from "../model"
-import { NewStoreForm } from "./forms"
+import { StoreForm } from "./forms"
 // import { findCurrentStore } from "./helpers"
 
 const lists = new Set()
@@ -48,7 +48,7 @@ const SideBar = () => {
           "button.w3-button.w3-orange",
           {
             onclick: () => {
-              mdl.state.modalContent = m(NewStoreForm, { mdl })
+              mdl.state.modalContent = m(StoreForm, { mdl })
               mdl.state.showModal = true
             },
           },

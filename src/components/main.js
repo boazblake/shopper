@@ -1,6 +1,6 @@
 import m from "mithril"
 import Cat from "./cat"
-import { NewStoreForm } from "./forms"
+import { StoreForm } from "./forms"
 import { propEq } from "ramda"
 
 const Main = () => {
@@ -38,7 +38,7 @@ const Main = () => {
               "button.w3-border-0 w3-button w3-panel.w3-display-middle w3-light-grey w3-col-1",
               {
                 onclick: () => {
-                  mdl.state.modalContent = m(NewStoreForm, { mdl })
+                  mdl.state.modalContent = m(StoreForm, { mdl })
                   mdl.state.showModal = true
                 },
               },

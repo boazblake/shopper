@@ -1,6 +1,6 @@
 import m from "mithril"
 import { load } from "../model"
-import { NewItemForm } from './forms'
+import { ItemForm } from './forms'
 
 const deleteItem = (mdl, id) => {
   console.log(mdl, id)
@@ -51,7 +51,13 @@ const dragEnd = (mdl, state, item) => (evt) => {
   return true
 }
 
-const handleSwipe = (e) => {
+const editItem = (mdl, item) => {
+  mdl.state.showModal = true
+  mdl.state.modalContent = m(ItemForm, { catId: item.catId, mdl, item, isEdit: true })
+}
+
+
+const handleSwipe = (mdl, item) => (e) => {
   // define the minimum distance to trigger the action
   const minDistance = 80;
   const container = document.querySelector('.swipe-container');
@@ -59,9 +65,11 @@ const handleSwipe = (e) => {
   // get the distance the user swiped
   const swipeDistance = container.scrollLeft - container.clientWidth;
   if (swipeDistance < minDistance * -1) {
-    console.log('lrft', e)
+    console.log('left', e)
+    editItem(mdl, item)
   } else if (swipeDistance > minDistance) {
     console.log('right', e)
+    deleteItem(mdl, item.id)
   } else {
     console.log('nothing', e)
     output.innerHTML = `did not swipe ${minDistance}px`;
@@ -79,7 +87,7 @@ const Item = () => {
         "li.w3-list-item.w3-leftbar.w3-hover-border-orange.dragster-block",
         {
           id: item.id,
-          draggable: true,//state.draggable,
+          draggable: state.draggable,
           class: state.highlight ? "w3-orange" : "",
           ondrop: drop(mdl, state, item),
           ondragover: dragOver(mdl, state, item),
@@ -89,15 +97,12 @@ const Item = () => {
           ondragstart: () => mdl.state.dragging.item = item,
         },
         m('.w3-bar.swipe-container', {
-          ontouchend: handleSwipe,
+          ontouchend: handleSwipe(mdl, item),
         },
 
           m('.swipe-action.swipe-left',
             m('button.w3-button w3-border.w3-right', {
-              onclick: () => {
-                mdl.state.showModal = true
-                mdl.state.modalContent = m(NewItemForm, { catId: item.catId, mdl, item, isEdit: true })
-              }
+              onclick: () => editItem(mdl, item)
             }, 'Edit')
           ),
 

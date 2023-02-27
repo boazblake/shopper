@@ -1,6 +1,6 @@
 import m from "mithril"
 import Item from "./item"
-import { NewItemForm } from "./forms"
+import { ItemForm } from "./forms"
 
 const Cat = ({ attrs: { mdl, cat } }) => {
   const state = {
@@ -35,7 +35,7 @@ const Cat = ({ attrs: { mdl, cat } }) => {
             "button.w3-btn w3-border-none w3-padding.w3-left",
             {
               onclick: () => {
-                mdl.state.modalContent = m(NewItemForm, { mdl, catId: cat.id })
+                mdl.state.modalContent = m(ItemForm, { mdl, catId: cat.id })
                 mdl.state.showModal = true
               }
             },

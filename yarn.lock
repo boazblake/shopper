@@ -33,6 +33,11 @@ data.task@^3.1.2:
   resolved "https://registry.yarnpkg.com/data.task/-/data.task-3.1.2.tgz#f61511339ad5c5ac6f417cc2666b95153dc7448d"
   integrity sha512-gGDjno8m/FS1kdMU3EmKcLaO1enFyfCV/EscvDZ4+KZDSg9xHePa2VFfWd+QO5PUp18NdCIziOpaSUE4Efw8/w==
 
+dragsterjs@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/dragsterjs/-/dragsterjs-1.6.2.tgz#c116adfcd3141a86b22fb88a7e4faf7f832b0e8f"
+  integrity sha512-I0I6QvtNIv6zF5/GclbinBCeZE8XDF7rra64wpNc+TvxkTEPicEBiyC//Sb2jYUpOgsQiR8+YgnZ4f5vqK26ig==
+
 esbuild-android-64@0.14.42:
   version "0.14.42"
   resolved "https://registry.yarnpkg.com/esbuild-android-64/-/esbuild-android-64-0.14.42.tgz#d7ab3d44d3671218d22bce52f65642b12908d954"
@@ -305,6 +310,11 @@ postcss@^8.4.13:
     nanoid "^3.3.4"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+pressure@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/pressure/-/pressure-2.2.0.tgz#4e2d0d6b206e4532342d3a7f23af4ba9bc7b6342"
+  integrity sha512-FZAIZTfsz3hIApUQGRKN9fcQYcjsuCB/EWKj5rWr+7hhdkT+3EK8vYsGcdzFebZE7FQTHaIz8Z9k7xTYEs3Qng==
 
 ramda@^0.27.0:
   version "0.27.2"

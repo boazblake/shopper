@@ -15,9 +15,11 @@
   "dependencies": {
     "@bunchtogether/vite-plugin-flow": "^1.0.2",
     "data.task": "^3.1.2",
+    "dragsterjs": "^1.6.2",
     "flow-remove-types": "^2.179.0",
     "mithril": "^2.2.0",
     "mithril-stream": "^2.0.0",
+    "pressure": "^2.2.0",
     "ramda": "^0.27.0"
   },
   "devDependencies": {

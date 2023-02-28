@@ -1,6 +1,34 @@
 import m from "mithril"
 import Item from "./item"
 import { ItemForm } from "./forms"
+import Dragster from 'dragsterjs';
+
+
+const setupCat = ({ dom }) => {
+  const drag = new Dragster({
+    elementSelector: '.dragster-block',
+    regionSelector: '.dragster-region',
+    dragHandleCssClass: false,
+    // dragOnlyRegionCssClass: PREFIX_CLASS_DRAGSTER + 'region--drag-only',
+    replaceElements: false,
+    updateRegionsHeight: true,
+    minimumRegionHeight: 60,
+    // onBeforeDragStart: dummyCallback,
+    // onAfterDragStart: dummyCallback,
+    // onBeforeDragMove: dummyCallback,
+    // onAfterDragMove: dummyCallback,
+    // onBeforeDragEnd: dummyCallback,
+    // onAfterDragEnd: dummyCallback,
+    // onAfterDragDrop: dummyCallback,
+    scrollWindowOnDrag: true,
+    dragOnlyRegionsEnabled: false,
+    cloneElements: false,
+    wrapDraggableElements: true,
+    shadowElementUnderMouse: false,
+  })
+
+  console.log(drag, dom)
+}
 
 const Cat = ({ attrs: { mdl, cat } }) => {
   const state = {

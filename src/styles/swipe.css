@@ -25,11 +25,12 @@
   align-items: center;
 }
 /* icon should remain sticky */
-i {
+icon {
   color: white;
   position: sticky;
   left: 16px;
   right: 16px;
+  font-size: 2rem;
 }
 /* action background colors */
 .swipe-left {

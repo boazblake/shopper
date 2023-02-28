@@ -57,22 +57,22 @@ const editItem = (mdl, item) => {
 }
 
 
-const handleSwipe = (mdl, item) => (e) => {
+const getContainer = dom =>
+  dom.classList.contains('swipe-container') ? dom : getContainer(dom.parentElement)
+
+const handleSwipe = (leftAction, rightAction) => (e) => {
   // define the minimum distance to trigger the action
-  const minDistance = 80;
-  const container = document.querySelector('.swipe-container');
-  const output = document.querySelector('.output');
-  // get the distance the user swiped
+  const container = getContainer(e.target);
+  const minDistance = container.clientWidth * 60 / 100
   const swipeDistance = container.scrollLeft - container.clientWidth;
-  if (swipeDistance < minDistance * -1) {
-    console.log('left', e)
-    editItem(mdl, item)
+  console.log(container.clientWidth, swipeDistance, minDistance * -1)
+  // get the distance the user swiped
+  if (swipeDistance < (minDistance * -1)) {
+    leftAction()
   } else if (swipeDistance > minDistance) {
-    console.log('right', e)
-    deleteItem(mdl, item.id)
+    rightAction()
   } else {
     console.log('nothing', e)
-    output.innerHTML = `did not swipe ${minDistance}px`;
   }
 }
 
@@ -97,11 +97,11 @@ const Item = () => {
           ondragstart: () => mdl.state.dragging.item = item,
         },
         m('.w3-bar.swipe-container', {
-          ontouchend: handleSwipe(mdl, item),
+          ontouchend: handleSwipe(() => editItem(mdl, item), () => deleteItem(mdl, item.id)),
         },
 
           m('.swipe-action.swipe-left',
-            m('button.w3-button w3-border.w3-right', {
+            m('button.w3-button w3-border.w3-left', {
               onclick: () => editItem(mdl, item)
             }, 'Edit')
           ),
@@ -112,9 +112,7 @@ const Item = () => {
 
 
           m('.swipe-action.swipe-right',
-            m('button.w3-button w3-border.w3-right', {
-              onclick: () => deleteItem(mdl, item.id)
-            }, 'Delete')
+            m('button.w3-button w3-border.w3-right', 'Delete')
           ),
           // m('button.w3-button w3-border.w3-right', {
           //   onmousedown: () => state.draggable = true,

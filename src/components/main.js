@@ -1,7 +1,6 @@
 import m from "mithril"
 import Cat from "./cat"
 import { StoreForm } from "./forms"
-import { propEq } from "ramda"
 
 const Main = () => {
   return {
@@ -9,18 +8,18 @@ const Main = () => {
       m(
         "section.w3-section.w3-row w3-ul. w3-padding-row",
         {
-          onupdate: ({ dom }) => {
-            if (state.setCat()) {
-              Array.from(dom.children)
-                .find(propEq("id", state.setCat()))
-                .scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                  inline: "center",
-                })
-              state.setCat(null)
-            }
-          },
+          // onupdate: ({ dom }) => {
+          //   if (state.setCat()) {
+          //     Array.from(dom.children)
+          //       .find(propEq("id", state.setCat()))
+          //       .scrollIntoView({
+          //         behavior: "smooth",
+          //         block: "start",
+          //         inline: "center",
+          //       })
+          //     state.setCat(null)
+          //   }
+          // },
           style: { height: "80dvh", overflow: "auto" },
         },
         mdl.currentStore

@@ -14,7 +14,6 @@
   scroll-snap-align: start;
   font-family: sans-serif;
   padding: 16px;
-  background-color: whitesmoke;
 }
 /* actions and element should be 100% wide */
 .swipe-action,

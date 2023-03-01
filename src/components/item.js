@@ -1,7 +1,6 @@
 import m from "mithril"
 import { load } from "../model"
 import { ItemForm } from './forms'
-import Pressure from 'pressure'
 
 const calcClass = (mdl, state) => {
   let classList = ""
@@ -10,14 +9,6 @@ const calcClass = (mdl, state) => {
   console.log(classList)
   return classList
 }
-
-const setupPressure = (state) => ({ dom }) => {
-  Pressure.set(dom, {
-    startDeepPress: (x) => { console.log('deep', x); mdl.state.dragging.isDragging = true },
-    endDeepPress: () => mdl.state.dragging.isDragging = false
-  })
-}
-
 
 
 const drop = (mdl, state) => (evt) => {
@@ -96,9 +87,7 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
   const container = getContainer(e.target);
   const minDistance = container.clientWidth * 30 / 100
   const swipeDistance = container.scrollLeft - container.clientWidth;
-  // console.log(container.clientWidth, swipeDistance, minDistance * -1)
   // get the distance the user swiped
-  console.log(swipeDistance)
   if (swipeDistance < (minDistance * -1)) {
     leftAction()
   } else if (swipeDistance > minDistance) {
@@ -110,7 +99,6 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
 
 
 const handleSwipe = (mdl, state, item) => e => {
-  // log('no')('swipe'); isCorrectDom(e.target) &&
   !mdl.state.dragging.isDragging
     ?
     runSwipe({
@@ -132,7 +120,7 @@ const Item = () => {
         {
           id: item.id,
           draggable: mdl.state.dragging.isDragging,
-          class: calcClass(mdl, state),
+          // class: calcClass(mdl, state),
           style: { height: '80px' },
           // onpointerdown: e => { mdl.state.dragging.isDragging = true; e.preventDefault(); e.stopPropagation(); },
           // onpointerup: e => { mdl.state.dragging.isDragging = false; e.preventDefault(); e.stopPropagation() },

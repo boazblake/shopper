@@ -57,17 +57,12 @@ const Cat = ({ attrs: { mdl, cat } }) => {
               backgroundColor: 'white',
             }
           },
-          m("p.w3-right", { style: { padding: '0 16px' } }, cat.title.toUpperCase()),
-          m(
-            "button.w3-btn w3-border-none w3-padding.w3-left",
-            {
-              onclick: () => {
-                mdl.state.modalContent = m(ItemForm, { mdl, catId: cat.id })
-                mdl.state.showModal = true
-              }
-            },
-            m('strong', '+')
-          )
+          m("strong.w3-right.w3-button", {
+            onclick: () => {
+              mdl.state.modalContent = m(ItemForm, { mdl, catId: cat.id })
+              mdl.state.showModal = true
+            }, style: { padding: '0 16px' }
+          }, cat.title.toUpperCase()),
         ),
 
         m(

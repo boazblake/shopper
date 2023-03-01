@@ -42,23 +42,22 @@ const Cat = ({ attrs: { mdl, cat } }) => {
   return {
     view: ({ attrs: { cat, mdl, key } }) =>
       m(
-        "section.w3-section.w3-border-left.",
+        "section.w3-section.w3-border-left",
         {
           key,
           id: cat.id,
         },
 
         m(
-          ".w3-panel.w3-bar",
+          ".w3-bar",
           {
             style: {
               position: '-webkit-sticky',
               position: 'sticky',
-              top: 0,
               backgroundColor: 'white',
             }
           },
-          m("p.w3-right", cat.title.toUpperCase()),
+          m("p.w3-right", { style: { padding: '0 16px' } }, cat.title.toUpperCase()),
           m(
             "button.w3-btn w3-border-none w3-padding.w3-left",
             {
@@ -67,12 +66,17 @@ const Cat = ({ attrs: { mdl, cat } }) => {
                 mdl.state.showModal = true
               }
             },
-            "+"
+            m('strong', '+')
           )
         ),
 
         m(
-          ".w3-ul w3-paddings w3-border-top.dragster-region",
+          ".w3-list.w3-ul",
+          {
+            // style: {
+            //   position: 'relative'
+            // }
+          },
           cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))
         )
       ),

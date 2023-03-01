@@ -2,6 +2,7 @@
 .swipe-container {
   display: flex;
   overflow: auto;
+  overflow-y: hidden;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
 }

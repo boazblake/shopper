@@ -80,8 +80,11 @@ const resetSwipeAction = (mdl, state, item) => {
   state.right = false
 }
 
+
+const isCorrectDom = dom => dom.classList.contains('swipe-container')
+
 const getContainer = dom =>
-  dom.classList.contains('swipe-container') ? dom : getContainer(dom.parentElement)
+  isCorrectDom(dom) ? dom : getContainer(dom.parentElement)
 
 const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
   // define the minimum distance to trigger the action
@@ -91,7 +94,7 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
   // console.log(container.clientWidth, swipeDistance, minDistance * -1)
   // get the distance the user swiped
   console.log(swipeDistance)
-  if (swipeDistance < (minDistance * -1)) {
+  if (swipeDistance < (minDistance / 2 * -1)) {
     leftAction()
   } else if (swipeDistance > minDistance) {
     rightAction()
@@ -100,13 +103,17 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
   }
 }
 
-const handleSwipe = (mdl, state, item) => e => state.draggable
-  ? () => { } :
-  runSwipe({
-    leftAction: () => leftSwipe(mdl, state, item),
-    rightAction: () => rightSwap(mdl, state, item),
-    resetAction: () => resetSwipeAction(mdl, state, item)
-  }, e)
+
+const handleSwipe = (mdl, state, item) => e => {
+  // log('no')('swipe'); isCorrectDom(e.target) &&
+  !state.draggable
+    ?
+    runSwipe({
+      leftAction: () => leftSwipe(mdl, state, item),
+      rightAction: () => rightSwap(mdl, state, item),
+      resetAction: () => resetSwipeAction(mdl, state, item)
+    }, e) : () => { }
+}
 
 const Item = () => {
   const state = {
@@ -116,18 +123,12 @@ const Item = () => {
   return {
     view: ({ attrs: { item, mdl } }) => {
       return m(
-        "li.w3-list-item.w3-leftbar.dragster-block",
+        "li.w3-li.w3-list-item.w3-leftbar.w3-border-bottom",
         {
           id: item.id,
           draggable: state.draggable,
           class: state.highlight ? "w3-orange" : "",
-          ondrop: drop(mdl, state, item),
-          ondragover: dragOver(mdl, state, item),
-          ondragenter: dragEnter(mdl, state, item),
-          ondragend: dragEnd(mdl, state, item),
-          ondragleave: dragLeave(state, item),
-          ondragstart: () => mdl.state.dragging.item = item,
-
+          style: { height: '70px' },
           // onmousedown: () => state.draggable = true,
           // ontouchstart: () => state.draggable = true,
           // onmouseup: () => state.draggable = false,
@@ -142,33 +143,36 @@ const Item = () => {
           //   // console.log(e.targetTouches[0].force)
           // },
         },
-        m('.w3-bar.swipe-container', {
+        m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)
         },
 
           !state.draggable && m('.swipe-action.swipe-left',
-            m('button.w3-button w3-border.w3-left', {
-              onclick: () => editItem(mdl, item)
+            m('', {
+              // onclick: () => editItem(mdl, item)
             }, 'Edit')
           ),
 
           m('.', {
             class: !state.draggable ? 'swipe-element' : '',
-            style: { height: '98px', width: '395px' },
+            style: { height: '60px', },
           },
-            item.img && m("img.w3-bar-item.w3-circle", { src: item.img, style: { width: '85px' } }),
+            m('.w3-left', m("img", { src: item.img, style: { maxWidth: '85px' } })),
+            m("", { style: { fontSize: '1.2rem' } }, item.title),
+            item.quantity > 0 && m(".w3-left", `${item.quantity} ${item.unit}`),
+            item.price > 0 && m(".w3-right", `$ ${item.price}`)
+            // m('.', {
+            //   style: { height: '100%', },
+            //   onpointerdown: e => { state.draggable = true; e.preventDefault(); e.stopPropagation(); },
+            //   onpointerup: e => { state.draggable = false; e.preventDefault(); e.stopPropagation() },
+            //   ondrop: drop(mdl, state, item),
+            //   ondragover: dragOver(mdl, state, item),
+            //   ondragenter: dragEnter(mdl, state, item),
+            //   ondragend: dragEnd(mdl, state, item),
+            //   ondragleave: dragLeave(state, item),
+            //   ondragstart: () => mdl.state.dragging.item = item,
 
-            m("h4.w3-bar-item", item.title),
-
-            m('.w3-border.w3-right', {
-              style: { height: '100%', },
-              onpointerdown: e => state.draggable = true,
-              onpointermove: e => console.log('pm', e, state),
-              onpointerup: e => state.draggable = false,
-              ontouchstart: () => state.draggable = true,
-              onmouseup: () => state.draggable = false,
-              ontouchend: () => state.draggable = false,
-            }, 'Move'),
+            // }, ''),
 
           ),
 
@@ -182,7 +186,6 @@ const Item = () => {
 
 
         ),
-        m('.w3-bar', item.quantity > 1 && m("p.w3-p", `${item.quantity} ${item.unit}`),)
       )
     },
   }

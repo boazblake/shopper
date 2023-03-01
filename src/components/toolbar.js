@@ -18,31 +18,25 @@ const Toolbar = () => {
   return {
     view: ({ attrs: { mdl, state } }) => {
       return m(
-        "nav.w3-bar.w3-container.w3-padding.w3-fixed",
-        m(
-          "button.w3-button.w3-hide-large.w3-border",
-          { onclick: () => state.toggleSideBar(state) },
-          "MENU"
-        ),
+        "nav.w3-fixed.w3-container",
         mdl.currentStore &&
         m(
-          ".w3-row w3-section",
+          ".w3-bar",
           m(
-            ".m6 w3-left",
-            m("h1.w3-title w3-col", mdl.currentStore.title)
+            "button.w3-button.w3-hide-large.w3-border.w3-bar-item.w3-left",
+            { onclick: () => state.toggleSideBar(state) },
+            "MENU"
           ),
+          m(".w3-bar-item", mdl.currentStore.title),
           m(
-            ".m3 w3-right",
-            m(
-              "button. w3-button  w3-border w3-large w3-col",
-              {
-                onclick: () => {
-                  mdl.state.modalContent = m(ItemForm, { mdl, catId: null, })
-                  mdl.state.showModal = true
-                },
+            "button.w3-button.w3-border.w3-bar-item.w3-right",
+            {
+              onclick: () => {
+                mdl.state.modalContent = m(ItemForm, { mdl, catId: null, })
+                mdl.state.showModal = true
               },
-              "+"
-            )
+            },
+            "Add an Item"
           )
         )
       )

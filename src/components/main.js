@@ -6,7 +6,7 @@ const Main = () => {
   return {
     view: ({ attrs: { mdl, state } }) =>
       m(
-        "section.w3-section.w3-row w3-ul. w3-padding-row",
+        "section.w3-section.w3-row w3-ul.w3-padding-row",
         {
           // onupdate: ({ dom }) => {
           //   if (state.setCat()) {
@@ -20,7 +20,7 @@ const Main = () => {
           //     state.setCat(null)
           //   }
           // },
-          style: { height: "80dvh", overflow: "auto" },
+          style: { height: "90dvh", overflowX: "hidden", overflowY: 'auto' },
         },
         mdl.currentStore
           ? mdl.currentStore.cats.map((cat, key) =>
@@ -34,7 +34,7 @@ const Main = () => {
           : m(
             "section.w3-section",
             m(
-              "button.w3-border-0 w3-button w3-panel.w3-display-middle w3-light-grey w3-col-1",
+              "button.w3-border w3-button w3-panel.w3-display-middle w3-light-grey w3-col-1",
               {
                 onclick: () => {
                   mdl.state.modalContent = m(StoreForm, { mdl })

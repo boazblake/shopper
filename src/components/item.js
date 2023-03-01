@@ -2,17 +2,8 @@ import m from "mithril"
 import { load } from "../model"
 import { ItemForm } from './forms'
 
-const calcClass = (mdl, state) => {
-  let classList = ""
-  if (state.highlight) classList += "w3-orange"
-  if (mdl.state.dragging.isDragging) classList += "is-dragging"
-  console.log(classList)
-  return classList
-}
-
 
 const drop = (mdl, state) => (evt) => {
-  console.log(DragDropTouch)
   evt.preventDefault()
   const onSuccess = () => {
     load(mdl)
@@ -20,7 +11,6 @@ const drop = (mdl, state) => (evt) => {
     mdl.state.dragging.item = null
     mdl.state.dragging.swapItem = null
   }
-
 
   mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order
   mdl.http
@@ -117,12 +107,13 @@ const Item = () => {
     view: ({ attrs: { item, mdl } }) => {
       console.log(mdl.state.dragging.isDragging)
       return m(
-        "li.w3-li.w3-leftbar.w3-border-bottom",
+        "li.w3-li.w3-leftbar",
         {
+          class: state.highlight ? '' : 'w3-border-bottom',
           id: item.id,
           draggable: mdl.state.dragging.isDragging,
           // class: calcClass(mdl, state),
-          style: { height: '80px' },
+          style: { height: '80px', borderBottom: '3px solid orange' },
           // onpointerdown: e => { mdl.state.dragging.isDragging = true; e.preventDefault(); e.stopPropagation(); },
           // onpointerup: e => { mdl.state.dragging.isDragging = false; e.preventDefault(); e.stopPropagation() },
           ondrop: drop(mdl, state, item),

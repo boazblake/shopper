@@ -112,6 +112,7 @@ const Item = () => {
   const state = {
     highlight: false,
   }
+  console.log(DragDropTouch)
   return {
     view: ({ attrs: { item, mdl } }) => {
       console.log(mdl.state.dragging.isDragging)
@@ -137,7 +138,9 @@ const Item = () => {
 
 
 
-          m('.swipe-action.swipe-left', m('icon', m.trust('&#9997;'))),
+          m('.swipe-action.swipe-left',
+            m('icon', m.trust('&#9997;'))
+          ),
 
           m('.swipe-element',
             m("img.w3-left", {

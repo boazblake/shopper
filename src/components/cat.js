@@ -27,7 +27,6 @@ const setupCat = ({ dom }) => {
     shadowElementUnderMouse: false,
   })
 
-  console.log(drag, dom)
 }
 
 const Cat = ({ attrs: { mdl, cat } }) => {

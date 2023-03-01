@@ -40,6 +40,7 @@ const Cat = ({ attrs: { mdl, cat } }) => {
   }
 
   return {
+    oncreate: setupCat,
     view: ({ attrs: { cat, mdl, key } }) =>
       m(
         "section.w3-section.w3-border-left",
@@ -71,12 +72,7 @@ const Cat = ({ attrs: { mdl, cat } }) => {
         ),
 
         m(
-          ".w3-list.w3-ul",
-          {
-            // style: {
-            //   position: 'relative'
-            // }
-          },
+          ".w3-ul",
           cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))
         )
       ),

@@ -13,7 +13,6 @@
 /* main element should always snap into view */
 .swipe-element {
   scroll-snap-align: start;
-  font-family: sans-serif;
   padding: 16px;
 }
 /* actions and element should be 100% wide */
@@ -35,9 +34,9 @@ icon {
 }
 /* action background colors */
 .swipe-left {
-  background-color: cornflowerblue;
+  /* background-color: cornflowerblue; */
 }
 .swipe-right {
   justify-content: flex-end;
-  background-color: red;
+  /* background-color: red; */
 }

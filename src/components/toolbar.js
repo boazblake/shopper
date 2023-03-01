@@ -28,6 +28,7 @@ const Toolbar = () => {
             "MENU"
           ),
           m(".w3-bar-item", mdl.currentStore.title),
+
           m(
             "button.w3-button.w3-border.w3-bar-item.w3-right",
             {
@@ -37,7 +38,8 @@ const Toolbar = () => {
               },
             },
             "Add an Item"
-          )
+          ),
+          mdl.state.dragging.isDragging && m("button.w3-block.w3-button.w3-green", { onclick: () => mdl.state.dragging.isDragging = false }, 'Save Changes'),
         )
       )
     },

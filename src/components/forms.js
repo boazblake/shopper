@@ -2,6 +2,11 @@ import m from "mithril"
 import { propEq } from "ramda"
 import { STORE, CAT, ITEM, load, units } from "../model"
 
+const closeModal = mdl => {
+  mdl.state.showModal = false
+  mdl.state.modalContent = null
+}
+
 const addStore = (mdl, state) => {
   let store = STORE(state.title)
 
@@ -27,7 +32,7 @@ const StoreForm = () => {
         "form.w3-container.w3-card.w3-white.w3-animate-zoom",
         { onsubmit: (e) => e.preventDefault() },
         m(
-          "div.w3-section",
+          ".w3-section",
           m("label", m("b", "Store Title")),
           m("input.w3-input.w3-border-bottom", {
             oncreate: ({ dom }) => { dom.select(); dom.focus() },
@@ -70,7 +75,7 @@ const CatForm = () => {
         "form.w3-container.w3-card.w3-white.w3-animate-zoom",
         { onsubmit: (e) => e.preventDefault() },
         m(
-          "div.w3-section",
+          ".w3-section",
           m("label", m("b", "Category Title")),
           m("input.w3-input.w3-border-bottom", {
             oncreate: ({ dom }) => { dom.select(); dom.focus() },
@@ -98,8 +103,7 @@ const addOrUpdateItem = (mdl, state, isEdit) => {
       catId, title: "", notes: "", order: 0, quantity: "", unit: "", price: 0
     }
     load(mdl)
-    mdl.state.showModal = false
-    mdl.state.modalContent = null
+    closeModal(mdl)
   }
   const addOrUpdateItemTask = (mdl, item) => isEdit
     ? mdl.http.postTask(mdl, "items", item)
@@ -109,16 +113,23 @@ const addOrUpdateItem = (mdl, state, isEdit) => {
     fork(log("error"), onSuccess)
 }
 
+const deleteItem = (mdl, id) =>
+  mdl.http.deleteTask(mdl, `items/${id}`).fork(log('err'), () => {
+    load(mdl);
+    closeModal(mdl)
+  })
+
+
 const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
   const state = {
     catId,
     catTitle: '',
     title: '',
     notes: '',
-    order: 0,
-    quantity: 0,
+    order: '',
+    quantity: '',
     unit: '',
-    price: 0
+    price: ''
   }
 
   if (catId) state.catTitle = mdl.cats.find(propEq('id', catId)).title
@@ -138,8 +149,17 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
     view: ({ attrs: { mdl } }) => m(
       "form.w3-container.w3-card.w3-white.w3-animate-zoom",
       { onsubmit: (e) => e.preventDefault() },
+      m('.w3-section', m(
+        "button.w3-button.w3-black.w3-border-black.w3-text-white",
+        {
+          style: {
+            position: 'absolute',
+            top: '-50px',
+          }, onclick: () => closeModal(mdl)
+        }, m.trust("&#10005;")
+      )),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Title")),
         m("input.w3-input.w3-border-bottom", {
           oncreate: ({ dom }) => { dom.select(); dom.focus() },
@@ -149,7 +169,7 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
         })
       ),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Category")),
         m("select.w3-input.w3-border-bottom", {
           value: mdl.cats.find(propEq('id', state.catId))?.title || '',
@@ -157,16 +177,18 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
         }, mdl.cats.map(cat => m(`option#${cat.id}`, cat.title)))
       ),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Quantity")),
         m("input.w3-input.w3-border-bottom", {
           type: "number",
           value: state.quantity,
+          pattern: "[0-9]*",
+          inputmode: "numeric",
           oninput: (e) => (state.quantity = e.target.value),
         })
       ),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Unit")),
         m("select.w3-input.w3-border-bottom", {
           value: state.unit,
@@ -174,24 +196,33 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
         }, units.map(unit => m('option', unit)))
       ),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Price")),
         m("input.w3-input.w3-border-bottom", {
-          type: "number",
+          pattern: "[0-9]*",
+          inputmode: "numeric",
           value: state.price,
           oninput: (e) => (state.price = e.target.value),
         })
       ),
       m(
-        "div.w3-section",
+        ".w3-section",
         m("label", m("b", "Notes")),
         m("textarea.w3-input.w3-border-bottom", { oninput: (e) => (state.notes = e.target.value), }, state.notes)
       ),
+
       m(
-        "button.w3-button.w3-block.w3-orange.w3-section.w3-padding",
+        "button.w3-button.w3-block.w3-orange.w3-margin-bottom",
         { onclick: () => addOrUpdateItem(mdl, state, isEdit) },
         isEdit ? "Update" : "Add"
-      )
+      ),
+
+      isEdit && m(
+        "button.w3-button.w3-red.w3-margin-top.w3-left",
+        { onclick: () => deleteItem(mdl, item.id) },
+        "Delete"
+      ),
+
     )
   }
 }

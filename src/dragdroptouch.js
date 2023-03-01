@@ -1,6 +1,6 @@
-var DragDropTouch;
+'use strict';
+window.DragDropTouch = {};
 (function (DragDropTouch_1) {
-  'use strict';
   /**
    * Object used to hold the data that is being dragged during drag and drop operations.
    *

@@ -99,7 +99,7 @@ const SideBar = () => {
                       : lists.add(store.id)
                   },
                 },
-                m("i.w3-btn.w3-circle", lists.has(store.id) ? "V" : ">")
+                m("icon.w3-btn", lists.has(store.id) ? "Hide" : m('p', "Show Sections"))
               )
             ),
 

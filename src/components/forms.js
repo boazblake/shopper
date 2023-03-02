@@ -93,9 +93,9 @@ const CatForm = () => {
   }
 }
 
-const getCurrentCatItemLength = (mdl, id) => mdl.cats.find(propEq('id', id)).items.length
+const getCurrentCatItemLength = (mdl, id) => mdl.cats.find(propEq('id', id)).items.length || 0
 
-const addOrUpdateItem = (mdl, state, isEdit) => {
+const validateAddOrUpdateItem = (mdl, state, isEdit) => {
   const { catId, title, notes, order, quantity, unit, price, id } = state
   let item = isEdit ? { catId, title, notes, order, quantity, unit, price, id } : ITEM({ catId, title, notes, order: getCurrentCatItemLength(mdl, catId), quantity, unit, price })
   const onSuccess = (data) => {
@@ -109,6 +109,7 @@ const addOrUpdateItem = (mdl, state, isEdit) => {
     ? mdl.http.postTask(mdl, "items", item)
     : mdl.http.putTask(mdl, `items/${item.id}`, item)
 
+  //VALIDATIONSS
   return addOrUpdateItemTask(mdl, item).
     fork(log("error"), onSuccess)
 }
@@ -213,7 +214,7 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
 
       m(
         "button.w3-button.w3-block.w3-orange.w3-margin-bottom",
-        { onclick: () => addOrUpdateItem(mdl, state, isEdit) },
+        { onclick: () => validateAddOrUpdateItem(mdl, state, isEdit) },
         isEdit ? "Update" : "Add"
       ),
 

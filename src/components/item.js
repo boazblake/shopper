@@ -12,7 +12,7 @@ const drop = (mdl, state) => (evt) => {
     mdl.state.dragging.swapItem = null
   }
 
-  mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order
+  mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order + 1
   mdl.http
     .putTask(mdl, `items/${mdl.state.dragging.item.id}`, mdl.state.dragging.item)
     .fork(log("error"), onSuccess)
@@ -105,7 +105,6 @@ const Item = () => {
   }
   return {
     view: ({ attrs: { item, mdl } }) => {
-      console.log(mdl.state.dragging.isDragging)
       return m(
         "li.w3-li.w3-leftbar",
         {

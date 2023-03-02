@@ -30,7 +30,7 @@ export const load = (mdl) => {
         cat.items = items
           .filter(propEq("catId", cat.id))
           .sort((a, b) => a.order - b.order)
-          .reverse()
+        // .reverse()
         return cat
       })
       .sort((a, b) => a.order - b.order)
@@ -50,7 +50,7 @@ export const load = (mdl) => {
   const onSuccess = ({ stores, cats, items }) => {
     mdl.stores = stores
     mdl.cats = cats
-    mdl.items = items.reverse()
+    mdl.items = items//.reverse()
     mdl.currentStore = loadStore(mdl)
   }
 
@@ -96,7 +96,7 @@ const model = {
   settings: {},
   state: {
     dragging: {
-      isDragging: false,
+      isDragging: true,
       item: "",
       swapItem: "",
     },

@@ -1,9 +1,10 @@
 import m from "mithril"
 import { load } from "../model"
 import { ItemForm } from './forms'
+import Sortable from "sortablejs";
 
 
-const drop = (mdl, state) => (evt) => {
+export const drop = (mdl, state) => (evt) => {
   evt.preventDefault()
   const onSuccess = () => {
     load(mdl)
@@ -12,7 +13,7 @@ const drop = (mdl, state) => (evt) => {
     mdl.state.dragging.swapItem = null
   }
 
-  mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order + 1
+  mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order
   mdl.http
     .putTask(mdl, `items/${mdl.state.dragging.item.id}`, mdl.state.dragging.item)
     .fork(log("error"), onSuccess)
@@ -20,26 +21,27 @@ const drop = (mdl, state) => (evt) => {
   return mdl
 }
 
-const dragOver = (mdl, state, item) => (evt) => {
+export const dragOver = (mdl, state, item) => (evt) => {
   state.highlight = true
   mdl.state.dragging.swapItem = item
   evt.preventDefault()
 }
 
-const dragEnter = (mdl, state, item) => (evt) => {
+export const dragEnter = (mdl, state, item) => (evt) => {
+  console.log('d', evt)
   state.highlight = true
   mdl.state.dragging.swapItem = item
   evt.preventDefault()
   return true
 }
 
-const dragLeave = (state) => (evt) => {
+export const dragLeave = (state) => (evt) => {
   state.highlight = false
   evt.preventDefault()
   return true
 }
 
-const dragEnd = (mdl, state, item) => (evt) => {
+export const dragEnd = (mdl, state, item) => (evt) => {
   state.highlight = false
   mdl.state.dragging.swapItem = item
   evt.preventDefault()
@@ -99,28 +101,35 @@ const handleSwipe = (mdl, state, item) => e => {
     }, e) : () => { }
 }
 
-const Item = () => {
+const setupDrag = mdl => ({ dom }) => {
+
+
+  mdl.dragging = Sortable.create(dom)
+  console.log(mdl.dragging)
+}
+
+const Item = ({ attrs: { mdl } }) => {
   const state = {
     highlight: false,
   }
   return {
     view: ({ attrs: { item, mdl } }) => {
       return m(
-        "li.w3-li.w3-leftbar",
+        "li.w3-leftbar",
         {
-          class: state.highlight ? '' : 'w3-border-bottom',
+          class: state.highlight ? 'w3-border-bottom' : 'w3-border-top',
           id: item.id,
           draggable: mdl.state.dragging.isDragging,
-          // class: calcClass(mdl, state),
-          style: { height: '80px', borderBottom: '3px solid orange' },
+          // style: { height: '80px', borderBottom: '3px solid orange' },
           // onpointerdown: e => { mdl.state.dragging.isDragging = true; e.preventDefault(); e.stopPropagation(); },
           // onpointerup: e => { mdl.state.dragging.isDragging = false; e.preventDefault(); e.stopPropagation() },
-          ondrop: drop(mdl, state, item),
-          ondragover: dragOver(mdl, state, item),
-          ondragenter: dragEnter(mdl, state, item),
-          ondragend: dragEnd(mdl, state, item),
-          ondragleave: dragLeave(state, item),
-          ondragstart: () => mdl.state.dragging.item = item,
+          // ondrop: drop(mdl, state, item),
+          // ondragover: dragOver(mdl, state, item),
+          // ondragenter: dragEnter(mdl, state, item),
+          // ondragend: dragEnd(mdl, state, item),
+          // ondragleave: dragLeave(state, item),
+          // ondragstart: (e) => mdl.state.dragging.item = item
+          // ,
         },
         m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)

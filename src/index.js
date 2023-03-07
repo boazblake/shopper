@@ -2,9 +2,10 @@ import m from "mithril"
 import "./styles/app.css"
 import "./styles/w3-styles.css"
 import "./styles/swipe.css"
+import "./styles/drag.css"
 import App from "./app.js"
 import model from "./model.js"
-import './dragdroptouch.js'
+// import './dragdroptouch.js'
 
 const root = document.body
 let winW = window.innerWidth

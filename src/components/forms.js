@@ -161,7 +161,7 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
       )),
       m(
         ".w3-section",
-        m("label", m("b", "Title")),
+        m("label", m("b", "Item")),
         m("input.w3-input.w3-border-bottom", {
           oncreate: ({ dom }) => { dom.select(); dom.focus() },
           type: "text",

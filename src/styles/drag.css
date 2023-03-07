@@ -17,3 +17,9 @@
 .dragster-temp {
   pointer-events: none;
 }
+
+
+.dragging {
+  border: 3px dashed orange;
+  opacity: 0.2;
+}

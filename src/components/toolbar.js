@@ -21,16 +21,16 @@ const Toolbar = () => {
         "nav.w3-fixed.w3-container",
         mdl.currentStore &&
         m(
-          ".w3-bar",
+          ".w3-row",
           m(
-            "button.w3-button.w3-hide-large.w3-border.w3-bar-item.w3-left",
+            "button.w3-button.w3-hide-large.w3-border.w3-col s4",
             { onclick: () => state.toggleSideBar(state) },
             "MENU"
           ),
-          m(".w3-bar-item", mdl.currentStore.title),
+          m(".w3-col s4 w3-center", mdl.currentStore.title),
 
           m(
-            "button.w3-button.w3-border.w3-bar-item.w3-right",
+            "button.w3-button.w3-border.w3-col s4",
             {
               onclick: () => {
                 mdl.state.modalContent = m(ItemForm, { mdl, catId: null, })

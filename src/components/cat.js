@@ -1,32 +1,49 @@
 import m from "mithril"
 import Item from "./item"
 import { ItemForm } from "./forms"
-import Dragster from 'dragsterjs';
+// import Dragster from 'dragsterjs'
+import Sortable from "sortablejs"
+import { load } from "../model"
+import { propEq } from "ramda"
 
+const updateOrder = (mdl, { newIndex, item }) => {
+  const updatedItem = mdl.items.find(propEq('id', item.id))
+  updatedItem.order = newIndex
+  mdl.http
+    .putTask(mdl, `items/${item.id}`, updatedItem)
+    .fork(log("error"), () => load(mdl))
+}
 
-const setupCat = ({ dom }) => {
-  const drag = new Dragster({
-    elementSelector: '.dragster-block',
-    regionSelector: '.dragster-region',
-    dragHandleCssClass: false,
-    // dragOnlyRegionCssClass: PREFIX_CLASS_DRAGSTER + 'region--drag-only',
-    replaceElements: false,
-    updateRegionsHeight: true,
-    minimumRegionHeight: 60,
-    // onBeforeDragStart: dummyCallback,
-    // onAfterDragStart: dummyCallback,
-    // onBeforeDragMove: dummyCallback,
-    // onAfterDragMove: dummyCallback,
-    // onBeforeDragEnd: dummyCallback,
-    // onAfterDragEnd: dummyCallback,
-    // onAfterDragDrop: dummyCallback,
-    scrollWindowOnDrag: true,
-    dragOnlyRegionsEnabled: false,
-    cloneElements: false,
-    wrapDraggableElements: true,
-    shadowElementUnderMouse: false,
-  })
-
+const setupDrag = mdl => ({ dom }) => {
+  const options = {
+    ghostClass: 'dragging',
+    animation: 150,
+    onEnd: (item) => updateOrder(mdl, item)
+  }
+  // [
+  //   'onChoose',
+  //   'onStart',
+  //   'onEnd',
+  //   'onAdd',
+  //   'onUpdate',
+  //   'onSort',
+  //   'onRemove',
+  //   'onChange',
+  //   'onUnchoose'
+  // ].forEach(function (name) {
+  //   options[name] = function (evt) {
+  //     console.log({
+  //       'event': name,
+  //       'this': this,
+  //       'item': evt.item,
+  //       'from': evt.from,
+  //       'to': evt.to,
+  //       'oldIndex': evt.oldIndex,
+  //       'newIndex': evt.newIndex
+  //     })
+  //   }
+  // })
+  mdl.state.dragList = Sortable.create(dom, options)
 }
 
 const Cat = ({ attrs: { mdl, cat } }) => {
@@ -35,11 +52,9 @@ const Cat = ({ attrs: { mdl, cat } }) => {
     title: cat.title,
     items: cat.items,
     isSelected: false,
-    togglePinSection: { onclick: () => (state.isSelected = !state.isSelected) },
   }
 
   return {
-    oncreate: setupCat,
     view: ({ attrs: { cat, mdl, key } }) =>
       m(
         "section.w3-section.w3-border-left",
@@ -65,8 +80,10 @@ const Cat = ({ attrs: { mdl, cat } }) => {
           }, cat.title.toUpperCase()),
         ),
 
-        m(
-          ".w3-ul",
+        m('.dragster-region dragster-drag-region',
+          {
+            oncreate: setupDrag(mdl),
+          },
           cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))
         )
       ),

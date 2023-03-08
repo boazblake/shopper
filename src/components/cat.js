@@ -1,12 +1,11 @@
 import m from "mithril"
 import Item from "./item"
 import { ItemForm } from "./forms"
-// import Dragster from 'dragsterjs'
 import Sortable from "sortablejs"
 import { load } from "../model"
 import { propEq } from "ramda"
 
-const updateOrder = (mdl, { newIndex, item }) => {
+const updateItemOrder = (mdl, { newIndex, item }) => {
   const updatedItem = mdl.items.find(propEq('id', item.id))
   updatedItem.order = newIndex
   mdl.http
@@ -18,7 +17,7 @@ const setupDrag = mdl => ({ dom }) => {
   const options = {
     ghostClass: 'dragging',
     animation: 150,
-    onEnd: (item) => updateOrder(mdl, item)
+    onEnd: (item) => updateItemOrder(mdl, item)
   }
   // [
   //   'onChoose',
@@ -80,7 +79,7 @@ const Cat = ({ attrs: { mdl, cat } }) => {
           }, cat.title.toUpperCase()),
         ),
 
-        m('.dragster-region dragster-drag-region',
+        m('.w3-list',
           {
             oncreate: setupDrag(mdl),
           },

@@ -5,9 +5,10 @@ import { propEq } from "ramda"
 
 
 export const units = [
-  'Of Them',
-  'Boxe(s)',
-  'Can(s)',
+  'of them',
+  'bag(s)',
+  'box(s)',
+  'can(s)',
   'gram(s)',
   'kilogram(s)',
   'pound(s)',

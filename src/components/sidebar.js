@@ -1,8 +1,54 @@
 import m from "mithril"
-import { isEmpty } from "ramda"
-import { load, loadStore } from "../model"
+import { isEmpty, propEq } from "ramda"
+import { load } from "../model"
 import { StoreForm } from "./forms"
-// import { findCurrentStore } from "./helpers"
+import Sortable from "sortablejs"
+
+
+
+const updateCatOrder = (mdl, { newIndex, item }) => {
+  console.log(mdl, item)
+  const updatedCat = mdl.cats.find(propEq('id', item.id))
+  updatedCat.order = newIndex
+  mdl.http
+    .putTask(mdl, `cats/${item.id}`, updatedCat)
+    .fork(log("error"), () => load(mdl))
+}
+
+
+
+const setupDrag = mdl => ({ dom }) => {
+  const options = {
+    ghostClass: 'dragging',
+    animation: 150,
+    onEnd: cat => updateCatOrder(mdl, cat)
+  }
+
+  // [
+  //   'onChoose',
+  //   'onStart',
+  //   'onEnd',
+  //   'onAdd',
+  //   'onUpdate',
+  //   'onSort',
+  //   'onRemove',
+  //   'onChange',
+  //   'onUnchoose'
+  // ].forEach(function (name) {
+  //   options[name] = function (evt) {
+  //     console.log({
+  //       'event': name,
+  //       'this': this,
+  //       'item': evt.item,
+  //       'from': evt.from,
+  //       'to': evt.to,
+  //       'oldIndex': evt.oldIndex,
+  //       'newIndex': evt.newIndex
+  //     })
+  //   }
+  // })
+  mdl.state.dragList = Sortable.create(dom, options)
+}
 
 const lists = new Set()
 
@@ -99,23 +145,26 @@ const SideBar = () => {
                       : lists.add(store.id)
                   },
                 },
-                m("icon.w3-btn", lists.has(store.id) ? "Hide" : m('p', "Show Sections"))
+                m("i.w3-tiny.w3-btn", lists.has(store.id) ? "Hide" : "Show")
               )
             ),
 
             !isEmpty(store.cats) &&
             m(
-              "ul.w3-list",
+              ".w3-list",
               {
                 class: lists.has(store.id) ? "w3-show" : "w3-hide",
                 id: store.id,
+                oncreate: setupDrag(mdl)
               },
               store.cats.map(
                 (cat, idx) =>
                   m(
-                    ".w3-list-item.pointer.w3-row",
+                    ".pointer.w3-row",
                     {
                       key: cat.id,
+                      id: cat.id,
+                      draggable: true,
                       onclick: () => {
                         setCat(state, cat.id).then(() =>
                           selectStore(mdl, state, store)
@@ -135,7 +184,7 @@ const SideBar = () => {
                     m("label.w3-col s4", cat.title),
                     m(
                       ".w3-right-align.w3-col s4",
-                      m(".w3-tag w3-orange", cat.issues?.length)
+                      m(".w3-tag w3-orange", cat.items?.length)
                     )
                   )
               )

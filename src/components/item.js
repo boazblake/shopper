@@ -1,52 +1,50 @@
 import m from "mithril"
-import { load } from "../model"
 import { ItemForm } from './forms'
 import Sortable from "sortablejs";
 
+// const drop = (mdl, state) => (evt) => {
+//   evt.preventDefault()
+//   const onSuccess = () => {
+//     load(mdl)
+//     state.highlight = false
+//     mdl.state.dragging.item = null
+//     mdl.state.dragging.swapItem = null
+//   }
 
-export const drop = (mdl, state) => (evt) => {
-  evt.preventDefault()
-  const onSuccess = () => {
-    load(mdl)
-    state.highlight = false
-    mdl.state.dragging.item = null
-    mdl.state.dragging.swapItem = null
-  }
+//   mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order
+//   mdl.http
+//     .putTask(mdl, `items/${mdl.state.dragging.item.id}`, mdl.state.dragging.item)
+//     .fork(log("error"), onSuccess)
 
-  mdl.state.dragging.item.order = mdl.state.dragging.swapItem.order
-  mdl.http
-    .putTask(mdl, `items/${mdl.state.dragging.item.id}`, mdl.state.dragging.item)
-    .fork(log("error"), onSuccess)
+//   return mdl
+// }
 
-  return mdl
-}
+// const dragOver = (mdl, state, item) => (evt) => {
+//   state.highlight = true
+//   mdl.state.dragging.swapItem = item
+//   evt.preventDefault()
+// }
 
-export const dragOver = (mdl, state, item) => (evt) => {
-  state.highlight = true
-  mdl.state.dragging.swapItem = item
-  evt.preventDefault()
-}
+// const dragEnter = (mdl, state, item) => (evt) => {
+//   console.log('d', evt)
+//   state.highlight = true
+//   mdl.state.dragging.swapItem = item
+//   evt.preventDefault()
+//   return true
+// }
 
-export const dragEnter = (mdl, state, item) => (evt) => {
-  console.log('d', evt)
-  state.highlight = true
-  mdl.state.dragging.swapItem = item
-  evt.preventDefault()
-  return true
-}
+// const dragLeave = (state) => (evt) => {
+//   state.highlight = false
+//   evt.preventDefault()
+//   return true
+// }
 
-export const dragLeave = (state) => (evt) => {
-  state.highlight = false
-  evt.preventDefault()
-  return true
-}
-
-export const dragEnd = (mdl, state, item) => (evt) => {
-  state.highlight = false
-  mdl.state.dragging.swapItem = item
-  evt.preventDefault()
-  return true
-}
+// const dragEnd = (mdl, state, item) => (evt) => {
+//   state.highlight = false
+//   mdl.state.dragging.swapItem = item
+//   evt.preventDefault()
+//   return true
+// }
 
 const editItem = (mdl, item) => {
   mdl.state.showModal = true
@@ -120,16 +118,6 @@ const Item = ({ attrs: { mdl } }) => {
           class: state.highlight ? 'w3-border-bottom' : 'w3-border-top',
           id: item.id,
           draggable: mdl.state.dragging.isDragging,
-          // style: { height: '80px', borderBottom: '3px solid orange' },
-          // onpointerdown: e => { mdl.state.dragging.isDragging = true; e.preventDefault(); e.stopPropagation(); },
-          // onpointerup: e => { mdl.state.dragging.isDragging = false; e.preventDefault(); e.stopPropagation() },
-          // ondrop: drop(mdl, state, item),
-          // ondragover: dragOver(mdl, state, item),
-          // ondragenter: dragEnter(mdl, state, item),
-          // ondragend: dragEnd(mdl, state, item),
-          // ondragleave: dragLeave(state, item),
-          // ondragstart: (e) => mdl.state.dragging.item = item
-          // ,
         },
         m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)

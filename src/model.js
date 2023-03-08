@@ -97,7 +97,7 @@ const model = {
   settings: {},
   state: {
     dragging: {
-      isDragging: true,
+      isDragging: false,
       item: "",
       swapItem: "",
     },

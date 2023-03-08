@@ -96,6 +96,8 @@ const model = {
   http,
   settings: {},
   state: {
+    dragItemList: {},
+    dragCatList: {},
     dragging: {
       isDragging: false,
       item: "",

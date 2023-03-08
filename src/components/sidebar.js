@@ -7,7 +7,7 @@ import Sortable from "sortablejs"
 
 
 const updateCatOrder = (mdl, { newIndex, item }) => {
-  console.log(mdl, item)
+  // console.log(mdl, item)
   const updatedCat = mdl.cats.find(propEq('id', item.id))
   updatedCat.order = newIndex
   mdl.http
@@ -47,7 +47,7 @@ const setupDrag = mdl => ({ dom }) => {
   //     })
   //   }
   // })
-  mdl.state.dragList = Sortable.create(dom, options)
+  mdl.state.dragCatList = Sortable.create(dom, options)
 }
 
 const lists = new Set()
@@ -139,6 +139,8 @@ const SideBar = () => {
                 ".w3-col.s4.w3-right-align",
                 {
                   onclick: (e) => {
+                    // const state = mdl.state.dragCatList[store.id].option('disabled')
+                    // mdl.state.dragCatList[store.id].option('disabled', !state)
                     e.stopPropagation()
                     lists.has(store.id)
                       ? lists.delete(store.id)

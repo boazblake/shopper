@@ -16,10 +16,11 @@ const updateItemOrder = (mdl, { newIndex, item }) => {
 const setupDrag = mdl => ({ dom }) => {
   const options = {
     ghostClass: 'dragging',
+    disabled: true,
     animation: 150,
     onEnd: (item) => updateItemOrder(mdl, item),
     // filter: '.dont-drag',
-    draggable: '.drag'
+    // draggable: '.drag'
   }
   // [
   //   'onChoose',
@@ -44,7 +45,7 @@ const setupDrag = mdl => ({ dom }) => {
   //     })
   //   }
   // })
-  mdl.state.dragList = Sortable.create(dom, options)
+  mdl.state.dragItemList[dom.id] = Sortable.create(dom, options)
 }
 
 const Cat = ({ attrs: { mdl, cat } }) => {
@@ -83,6 +84,7 @@ const Cat = ({ attrs: { mdl, cat } }) => {
 
         m('.w3-list',
           {
+            id: cat.id,
             oncreate: setupDrag(mdl),
           },
           cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))

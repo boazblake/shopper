@@ -3,10 +3,15 @@ import { load } from "../model"
 import { ItemForm } from './forms'
 
 
+const saveChanges = mdl => {
+  mdl.state.dragging.isDragging = false
+  for (const cat in mdl.state.ItemdragList) {
+    mdl.state.dragItemList[cat].option('disabled', true)
+  }
+}
 
 const updateStore = (mdl) => {
   const onSuccess = (data) => {
-    console.log("update store", data)
     load(mdl)
   }
   mdl.http
@@ -39,7 +44,7 @@ const Toolbar = () => {
             },
             "Add an Item"
           ),
-          mdl.state.dragging.isDragging && m("button.w3-block.w3-button.w3-green", { onclick: () => { mdl.state.dragging.isDragging = false; console.log(mdl.state) } }, 'Save Changes'),
+          mdl.state.dragging.isDragging && m("button.w3-block.w3-button.w3-green", { onclick: () => saveChanges(mdl) }, 'Save Changes'),
         )
       )
     },

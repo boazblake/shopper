@@ -58,7 +58,8 @@ const leftSwipe = (mdl, state, item) => {
 }
 const rightSwipe = (mdl, state, item) => {
   state.right = true
-  mdl.state.dragging.isDragging = !mdl.state.dragging.isDragging
+  mdl.state.dragging.isDragging = true//!mdl.state.dragging.isDragging
+  mdl.state.dragItemList[item.catId].option('disabled', false)
   resetSwipeAction(mdl, state, item)
 }
 
@@ -118,7 +119,7 @@ const Item = ({ attrs: { mdl } }) => {
           id: item.id,
           class: mdl.state.dragging.isDragging ? 'drag' : 'dont-drag',
           ondblclick: e => rightSwipe(mdl, state, item),
-          ondbltouch: e => rightSwipe(mdl, state, item),
+          // ondbltouch: e => rightSwipe(mdl, state, item),
         },
         m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)

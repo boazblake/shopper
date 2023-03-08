@@ -90,6 +90,7 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
 
 
 const handleSwipe = (mdl, state, item) => e => {
+  console.log(mdl.state.dragging)
   !mdl.state.dragging.isDragging
     ?
     runSwipe({

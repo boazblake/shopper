@@ -42,7 +42,7 @@ const setupDrag = mdl => ({ dom }) => {
   //     })
   //   }
   // })
-  mdl.state.dragList = Sortable.create(dom, options)
+  if (mdl.state.dragging.isDragging) mdl.state.dragList = Sortable.create(dom, options)
 }
 
 const Cat = ({ attrs: { mdl, cat } }) => {

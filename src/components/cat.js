@@ -18,7 +18,8 @@ const setupDrag = mdl => ({ dom }) => {
     ghostClass: 'dragging',
     animation: 150,
     onEnd: (item) => updateItemOrder(mdl, item),
-    filter: '.dont-drag'
+    // filter: '.dont-drag',
+    draggable: '.drag'
   }
   // [
   //   'onChoose',

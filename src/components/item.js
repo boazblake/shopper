@@ -115,10 +115,10 @@ const Item = ({ attrs: { mdl } }) => {
       return m(
         "li.w3-leftbar",
         {
-          // class: state.highlight ? 'w3-border-bottom' : 'w3-border-top',
           id: item.id,
-          class: mdl.state.dragging.isDragging ? '' : 'dont-drag',
+          class: mdl.state.dragging.isDragging ? 'drag' : 'dont-drag',
           ondblclick: e => rightSwipe(mdl, state, item),
+          ondbltouch: e => rightSwipe(mdl, state, item),
         },
         m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)

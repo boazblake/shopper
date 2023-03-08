@@ -39,7 +39,7 @@ const Toolbar = () => {
             },
             "Add an Item"
           ),
-          mdl.state.dragging.isDragging && m("button.w3-block.w3-button.w3-green", { onclick: () => mdl.state.dragging.isDragging = false }, 'Save Changes'),
+          mdl.state.dragging.isDragging && m("button.w3-block.w3-button.w3-green", { onclick: () => { mdl.state.dragging.isDragging = false; console.log(mdl.state) } }, 'Save Changes'),
         )
       )
     },

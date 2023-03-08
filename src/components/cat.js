@@ -17,7 +17,8 @@ const setupDrag = mdl => ({ dom }) => {
   const options = {
     ghostClass: 'dragging',
     animation: 150,
-    onEnd: (item) => updateItemOrder(mdl, item)
+    onEnd: (item) => updateItemOrder(mdl, item),
+    filter: '.dont-drag'
   }
   // [
   //   'onChoose',
@@ -42,7 +43,7 @@ const setupDrag = mdl => ({ dom }) => {
   //     })
   //   }
   // })
-  if (mdl.state.dragging.isDragging) mdl.state.dragList = Sortable.create(dom, options)
+  mdl.state.dragList = Sortable.create(dom, options)
 }
 
 const Cat = ({ attrs: { mdl, cat } }) => {

@@ -56,7 +56,7 @@ const leftSwipe = (mdl, state, item) => {
   editItem(mdl, item)
   resetSwipeAction(mdl, state, item)
 }
-const rightSwap = (mdl, state, item) => {
+const rightSwipe = (mdl, state, item) => {
   state.right = true
   mdl.state.dragging.isDragging = !mdl.state.dragging.isDragging
   resetSwipeAction(mdl, state, item)
@@ -90,12 +90,11 @@ const runSwipe = ({ leftAction, rightAction, resetAction }, e) => {
 
 
 const handleSwipe = (mdl, state, item) => e => {
-  console.log(mdl.state.dragging)
   !mdl.state.dragging.isDragging
     ?
     runSwipe({
       leftAction: () => leftSwipe(mdl, state, item),
-      rightAction: () => rightSwap(mdl, state, item),
+      rightAction: () => rightSwipe(mdl, state, item),
       resetAction: () => resetSwipeAction(mdl, state, item)
     }, e) : () => { }
 }
@@ -116,9 +115,10 @@ const Item = ({ attrs: { mdl } }) => {
       return m(
         "li.w3-leftbar",
         {
-          class: state.highlight ? 'w3-border-bottom' : 'w3-border-top',
+          // class: state.highlight ? 'w3-border-bottom' : 'w3-border-top',
           id: item.id,
-          draggable: mdl.state.dragging.isDragging,
+          class: mdl.state.dragging.isDragging ? '' : 'dont-drag',
+          ondblclick: e => rightSwipe(mdl, state, item),
         },
         m('.swipe-container', {
           ontouchend: handleSwipe(mdl, state, item)

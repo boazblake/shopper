@@ -1,5 +1,5 @@
 import m from "mithril"
-import { ItemForm } from './forms'
+import { ItemForm } from '../forms'
 import Sortable from "sortablejs";
 
 // const drop = (mdl, state) => (evt) => {
@@ -47,8 +47,9 @@ import Sortable from "sortablejs";
 // }
 
 const editItem = (mdl, item) => {
-  mdl.state.showModal = true
-  mdl.state.modalContent = m(ItemForm, { catId: item.catId, mdl, item, isEdit: true })
+  const content = ItemForm
+  const opts = { catId: item.catId, item, isEdit: true }
+  openModal({ content, mdl, opts })
 }
 
 const leftSwipe = (mdl, state, item) => {
@@ -59,6 +60,7 @@ const leftSwipe = (mdl, state, item) => {
 const rightSwipe = (mdl, state, item) => {
   state.right = true
   mdl.state.dragging.isDragging = true//!mdl.state.dragging.isDragging
+  console.log(mdl.state.dragItemList[item.catId])
   mdl.state.dragItemList[item.catId].option('disabled', false)
   resetSwipeAction(mdl, state, item)
 }

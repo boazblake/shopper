@@ -1,4 +1,4 @@
-import { propEq } from "ramda"
+
 
 const uuid = () => {
   return "xxxxxxxx".replace(/[xy]/g, function (c) {
@@ -17,17 +17,8 @@ const log = (m) => (v) => {
 
 window.log = log
 
-const shortName = (mdl) =>
-  `${mdl.currentProject.title.slice(0, 3).toUpperCase()}-`
 
-// const updateDropped = mdl => cardId => newColId =>
-// mdl.cols.filtet
 
-const findCurrentProject = (mdl) => {
-  // mdl.db.allDocs(log("all doxs"), log("no docs"))
-
-  return mdl.projects.find(propEq("id", mdl.state.projectId))
-}
 
 const toDto = (mdl) => ({
   of: (x) => {
@@ -37,5 +28,7 @@ const toDto = (mdl) => ({
   },
 })
 
-export { uuid, log, shortName, range }
+
+
+export { uuid, log, range }
 

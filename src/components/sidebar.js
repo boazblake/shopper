@@ -93,10 +93,7 @@ const SideBar = () => {
         m(
           "button.w3-button.w3-orange",
           {
-            onclick: () => {
-              mdl.state.modalContent = m(StoreForm, { mdl })
-              mdl.state.showModal = true
-            },
+            onclick: () => openModal({ mdl, content: StoreForm }),
           },
           "New Store"
         ),

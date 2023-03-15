@@ -1,10 +1,8 @@
 import m from "mithril"
-import SideBar from "./components/sidebar"
 import Toolbar from "./components/toolbar"
 import Main from "./components/main"
 import Modal from "./components/modal"
 import { load } from "./model"
-import Stream from "mithril-stream"
 
 
 
@@ -18,7 +16,6 @@ const mainStyle = mdl => ({
 const App = (mdl) => {
   const state = {
     sidebar: { open: false },
-    setCat: Stream(null),
     toggleSideBar: (state) => (state.sidebar.open = !state.sidebar.open),
   }
   load(mdl)
@@ -28,7 +25,6 @@ const App = (mdl) => {
         "page.w3-theme",
         m(Modal, { mdl }),
 
-        m(SideBar, { mdl, state }),
 
         m(
           "section.#main",

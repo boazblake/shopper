@@ -1,10 +1,25 @@
 import Task from "data.task"
 import http from "./http"
 import { log, uuid } from "./helpers"
-import { propEq } from "ramda"
+import { propEq, sortBy } from "ramda"
+import Stream from "mithril-stream"
+
+const shortName = (mdl) => `${mdl.currentProject.title.slice(0, 3).toUpperCase()}-`
+
+const findCurrentProject = (mdl) => mdl.projects.find(propEq("id", mdl.state.projectId))
+
+const closeModal = mdl => {
+  mdl.state.modalContent = null
+  mdl.state.showModal = false
+}
+
+const openModal = ({ content, mdl, opts }) => {
+  mdl.state.modalContent = { content, attrs: { mdl, ...opts } }
+  mdl.state.showModal = true
+}
 
 
-export const units = [
+const units = [
   'of them',
   'bag(s)',
   'box(s)',
@@ -17,10 +32,12 @@ export const units = [
   'ounce(s)'
 ]
 
-export const loadStore = (mdl) =>
-  mdl.stores.find(propEq("id", mdl.currentStore?.id)) || mdl.stores[0]
+const getCurrentStore = (mdl) =>
+  mdl.stores.find(propEq("id", mdl.currentStore()?.id)) || mdl.stores[0]
 
-export const load = (mdl) => {
+const sortByOrder = sortBy(propEq('order'))
+
+const load = (mdl) => {
   const getStoresTask = (mdl) => mdl.http.getTask(mdl, "stores")
   const getCatsTask = (mdl) => mdl.http.getTask(mdl, "cats")
   const getItemsTask = (mdl) => mdl.http.getTask(mdl, "items")
@@ -35,15 +52,15 @@ export const load = (mdl) => {
         return cat
       })
       .sort((a, b) => a.order - b.order)
-
+    console.log('loading')
     return {
       cats: sortedCats,
-      stores: stores.map((store) => {
+      stores: sortByOrder(stores.map((store) => {
         store.cats = sortedCats
           .filter(propEq("storeId", store.id))
           .sort((a, b) => a.order - b.order)
         return store
-      }),
+      })),
       items: items,
     }
   }
@@ -51,8 +68,9 @@ export const load = (mdl) => {
   const onSuccess = ({ stores, cats, items }) => {
     mdl.stores = stores
     mdl.cats = cats
-    mdl.items = items//.reverse()
-    mdl.currentStore = loadStore(mdl)
+    mdl.items = items
+    mdl.currentStore(getCurrentStore(mdl))
+    // console.log('onsuccess stores', stores, mdl.currentStore().cats)
   }
 
   Task.of(
@@ -65,7 +83,7 @@ export const load = (mdl) => {
     .fork(log("error"), onSuccess)
 }
 
-export const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => ({
+const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => ({
   id: uuid(),
   title,
   notes,
@@ -77,7 +95,7 @@ export const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => (
   notes,
   purchased: false,
 })
-export const CAT = (title, storeId, order = 0) => ({
+const CAT = (title, storeId, order = 0) => ({
   id: uuid(),
   title,
   order,
@@ -85,7 +103,7 @@ export const CAT = (title, storeId, order = 0) => ({
   collapsed: false,
   dragCollapsed: false
 })
-export const STORE = (title, order = 0) => ({
+const STORE = ({ title, order = 0 }) => ({
   title,
   id: uuid(),
   order,
@@ -111,7 +129,20 @@ const model = {
   stores: [],
   cats: [],
   items: [],
-  currentStore: null,
+  currentStore: Stream(null),
+}
+
+export {
+  units,
+  sortByOrder,
+  shortName,
+  findCurrentProject,
+  closeModal,
+  openModal,
+  getCurrentStore,
+  load,
+  ITEM,
+  CAT,
+  STORE,
 }
 export default model
-

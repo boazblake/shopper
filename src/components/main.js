@@ -1,29 +1,17 @@
 import m from "mithril"
 import Cat from "./cat"
-import { StoreForm } from "./forms"
-
+import { StoreForm } from "../forms"
+import { openModal } from "../model"
 const Main = () => {
   return {
     view: ({ attrs: { mdl, state } }) =>
       m(
         "section.w3-section.w3-row w3-ul.w3-padding-row",
         {
-          // onupdate: ({ dom }) => {
-          //   if (state.setCat()) {
-          //     Array.from(dom.children)
-          //       .find(propEq("id", state.setCat()))
-          //       .scrollIntoView({
-          //         behavior: "smooth",
-          //         block: "start",
-          //         inline: "center",
-          //       })
-          //     state.setCat(null)
-          //   }
-          // },
           style: { height: "90dvh", overflowX: "hidden", overflowY: 'auto' },
         },
-        mdl.currentStore
-          ? mdl.currentStore.cats.map((cat, key) =>
+        mdl.currentStore()
+          ? mdl.currentStore().cats.map((cat, key) =>
             m(Cat, {
               key,
               cat,
@@ -36,10 +24,8 @@ const Main = () => {
             m(
               "button.w3-border w3-button w3-panel.w3-display-middle w3-light-grey w3-col-1",
               {
-                onclick: () => {
-                  mdl.state.modalContent = m(StoreForm, { mdl })
-                  mdl.state.showModal = true
-                },
+                onclick: () => openModal({ content: StoreForm, mdl, isEdit: false })
+                ,
               },
               "Create a Store to Begin"
             )

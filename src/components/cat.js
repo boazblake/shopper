@@ -1,8 +1,8 @@
 import m from "mithril"
 import Item from "./item"
-import { ItemForm } from "./forms"
+import { ItemForm } from "../forms"
 import Sortable from "sortablejs"
-import { load } from "../model"
+import { load, openModal } from "../model"
 import { propEq } from "ramda"
 
 const updateItemOrder = (mdl, { newIndex, item }) => {
@@ -13,7 +13,7 @@ const updateItemOrder = (mdl, { newIndex, item }) => {
     .fork(log("error"), () => load(mdl))
 }
 
-const setupDrag = mdl => ({ dom }) => {
+const setupDrag = (mdl, stat) => ({ dom }) => {
   const options = {
     ghostClass: 'dragging',
     disabled: true,
@@ -45,6 +45,7 @@ const setupDrag = mdl => ({ dom }) => {
   //     })
   //   }
   // })
+  // console.log(stat, dom.id)
   mdl.state.dragItemList[dom.id] = Sortable.create(dom, options)
 }
 
@@ -75,17 +76,17 @@ const Cat = ({ attrs: { mdl, cat } }) => {
             }
           },
           m("strong.w3-right.w3-button", {
-            onclick: () => {
-              mdl.state.modalContent = m(ItemForm, { mdl, catId: cat.id })
-              mdl.state.showModal = true
-            }, style: { padding: '0 16px' }
+            style: { padding: '0 16px' },
+            onclick: () =>
+              openModal({ mdl, content: ItemForm, opts: { catId: cat.id } })
           }, cat.title.toUpperCase()),
         ),
 
         m('.w3-list',
           {
             id: cat.id,
-            oncreate: setupDrag(mdl),
+            oncreate: setupDrag(mdl, 'create'),
+            onupdate: setupDrag(mdl, 'update'),
           },
           cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))
         )

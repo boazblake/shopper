@@ -65,10 +65,11 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
       m('.w3-section', m(
         "button.w3-button.w3-black.w3-border-black.w3-text-white",
         {
-          style: {
-            position: 'absolute',
-            top: '-50px',
-          }, onclick: () => closeModal(mdl)
+          // style: {
+          //   position: 'absolute',
+          //   top: '-50px',
+          // },
+          onclick: () => closeModal(mdl)
         }, m.trust("&#10005;")
       )),
       m(

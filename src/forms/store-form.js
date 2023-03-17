@@ -4,35 +4,6 @@ import { CatForm } from './cat-form'
 import { propEq } from 'ramda'
 import { STORE, load, closeModal } from '../model'
 
-
-
-
-
-const deleteCat = (mdl, cat) => {
-
-  const onError = log("error")
-  const onSuccess = () => {
-
-    load(mdl)
-  }
-
-  mdl.http.deleteTask(mdl, `cats/${cat.id}`).fork(onError, onSuccess)
-}
-
-
-const addStore = (mdl, state) => {
-  let store = STORE(state.title)
-
-  const onError = log("error")
-  const onSuccess = (data) => {
-    state.title = ""
-    closeModal(mdl)
-    load(mdl)
-  }
-
-  mdl.http.postTask(mdl, "stores", store).fork(onError, onSuccess)
-}
-
 const updateCatOrder = (mdl, { newIndex, item }) => {
   const updatedCat = mdl.cats.find(propEq('id', item.id))
   updatedCat.order = newIndex
@@ -137,38 +108,29 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
         "form.w3-container.w3-card.w3-white.w3-animate-zoom",
         { onsubmit: (e) => e.preventDefault() },
         m('.w3-section', m(
-          "button.w3-button.w3-black.w3-border-black.w3-text-white",
-          {
-            // style: {
-            //   position: 'absolute',
-            //   top: '-50px',
-            // },
-            onclick: () => closeModal(mdl)
-          }, m.trust("&#10005;")
+          "button.w3-button.w3-black.w3-border.w3-border-black.w3-text-white",
+          { onclick: () => closeModal(mdl) }, m.trust("&#10005;")
         )),
         m(
           ".w3-section",
-          m('.w3-cell-row',
-            m('.w3-cell', m("input.w3-input.w3-border-bottom", {
+          m('.w3-bar.w3-block',
+            m("input.w3-input.w3-border-bottom.w3-bar-item", {
               type: "text",
               value: state.title,
               placeholder: 'Store Name',
-              oninput: (e) => (store.title = e.target.value),
-            })),
+              oninput: (e) => {
+                isEdit ? (store.title = e.target.value) :
+                  state.title = e.target.value
+              },
+            }),
             m(
-              "button.w3-button.w3-cell",
+              "button.w3-button.w3-bar-item",
               { onclick: () => validateAddOrUpdateStore(mdl, state, isEdit) },
               isEdit ? "Update Name" : "Add Store"
             )),
-          // isEdit && m('.w3-section', m(
-          //   "button.w3-button.w3-block", {
-          //   class: state.addNewCat || state.editCat ? 'w3-red' : 'w3-green',
-          //   onclick: () => state.addNewCat || state.editCat ? closeCatForm() : state.addNewCat = true,
-          // }, state.addNewCat || state.editCat ? "Cancel / Close" : "Add New Category"
-          // ),
-          isEdit && m(CatForm, { mdl, closeCatForm }),
 
-          // ),
+          isEdit && m('.w3-block', m(CatForm, { mdl, closeCatForm })),
+
         ),
         isEdit && m(
           ".w3-list", {
@@ -182,31 +144,39 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
               id: cat.id, key: cat.id,
             },
               m('p.handle.w3-col s1', m.trust('&#8942;')),
-              m('.w3-col s11 w3-row',
-                state.editCat == cat.id ?
-                  m(CatForm, { mdl, cat: state.cat, isEdit, closeCatForm }) :
-
-                  m("label.w3-col s7 m6 l6", cat.title),
-
-                m(".w3-col s4", m("button.w3-button", {
-                  onclick: () => {
-                    state.cat = cat
-                    state.editCat = cat.id
-                  }
-                }, 'Edit'),
-                  m("button.w3-button", { onclick: () => deleteCat(mdl, cat) }, 'X')
+              m('.w3-col s8',
+                m('.w3-row',
+                  m("label",
+                    state.editCat == cat.id ?
+                      m(CatForm, { mdl, cat: state.cat, isEdit, closeCatForm }) : cat.title),
                 ),
 
-              ),
-              m('.w3-col s11',
                 m('.w3-row',
                   m("label.w3-col", cat.items.length))
+
               ),
+              m(".w3-col s3.w3-row",
+                m("button.w3-button.w3-border.w3-col", {
+                  class: state.editCat ? 'w3-border-red' : 'w3-border-green',
+                  onclick: () => {
+                    if (state.editCat == cat.id) {
+                      state.cat = null
+                      state.editCat = false
+
+                    } else {
+                      state.cat = cat
+                      state.editCat = cat.id
+                    }
+                  }
+                }, state.editCat ? 'Cancel' : m.trust('&#9997;')),
+
+              ),
+
             )
           )),
 
         isEdit && m(
-          "button.w3-button.w3-red.w3-margin-top.w3-left",
+          "button.w3-button.w3-border.w3-border-red.w3-margin-top.w3-left",
           { onclick: () => deleteStore(mdl, store.id) },
           "Delete"
         ),

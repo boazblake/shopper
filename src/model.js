@@ -52,7 +52,6 @@ const load = (mdl) => {
         return cat
       })
       .sort((a, b) => a.order - b.order)
-    console.log('loading')
     return {
       cats: sortedCats,
       stores: sortByOrder(stores.map((store) => {

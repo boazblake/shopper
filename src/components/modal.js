@@ -3,7 +3,6 @@ import { closeModal } from "../model"
 const Modal = ({ attrs: { mdl } }) => {
   return {
     view: ({ attrs: { mdl } }) => {
-      console.log(mdl.state.modalContent)
       return mdl.state.modalContent ?
         m(
           ".w3-modal#modal",

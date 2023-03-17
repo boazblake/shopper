@@ -7,10 +7,6 @@ body {
   touch-action:none;
 }
 
-.move-right {
-  margin-left: 200px !important;
-}
-
 .pointer {
   cursor: pointer;
 }

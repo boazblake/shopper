@@ -9,7 +9,6 @@ import { load } from "./model"
 const mainStyle = mdl => ({
   maxHeight: "100dvh",
   overflow: "hidden",
-  marginLeft: mdl.settings.profile == 'desktop' ? '300px' : '0'
 })
 
 

@@ -6,6 +6,7 @@ import { load, openModal } from "../model"
 import { propEq } from "ramda"
 
 const updateItemOrder = (mdl, { newIndex, item }) => {
+  console.log(item)
   const updatedItem = mdl.items.find(propEq('id', item.id))
   updatedItem.order = newIndex
   mdl.http
@@ -16,8 +17,9 @@ const updateItemOrder = (mdl, { newIndex, item }) => {
 const setupDrag = (mdl, stat) => ({ dom }) => {
   const options = {
     ghostClass: 'dragging',
-    disabled: true,
+    // disabled: true,
     animation: 150,
+    handle: '.handle',
     onEnd: (item) => updateItemOrder(mdl, item),
     // filter: '.dont-drag',
     // draggable: '.drag'
@@ -88,7 +90,10 @@ const Cat = ({ attrs: { mdl, cat } }) => {
             oncreate: setupDrag(mdl, 'create'),
             onupdate: setupDrag(mdl, 'update'),
           },
-          cat.items.map((item, idx) => m(Item, { key: item.id, item, mdl }))
+          cat.items.map((item, idx) => m('.w3-row',
+            { id: item.id, key: item.id },
+            m('p.handle.w3-col s1', m.trust('&#8942;')),
+            m(Item, { item, mdl })))
         )
       ),
   }

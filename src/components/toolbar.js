@@ -30,14 +30,14 @@ const Toolbar = () => {
           ".w3-row",
 
           m(
-            "button.w3-button.w3-orange.w3-button.w3-hide-large.w3-border.w3-col s4",
+            "button.w3-button.w3-orange.w3-col s4",
             {
               onclick: () => openModal({ mdl, content: StoreForm })
             },
             "New Store"
           ),
 
-          m('select.w3-select.w3-col s4 w3-center', {
+          m('select.w3-bar-item.w3-select.w3-border-0.w3-col s4 w3-center', {
             value: mdl.currentStore().id,
             onchange: e => {
               mdl.currentStore(mdl.stores.find(propEq('id', e.target.value)))
@@ -48,7 +48,7 @@ const Toolbar = () => {
 
 
           m(
-            "button.w3-button.w3-border.w3-col s4",
+            "button.w3-button.w3-col s4",
             {
               onclick: () =>
                 openModal({ content: StoreForm, mdl, opts: { isEdit: true } })

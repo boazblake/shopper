@@ -114,7 +114,7 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
         m(
           ".w3-section",
           m('.w3-bar.w3-block',
-            m("input.w3-input.w3-border-bottom.w3-bar-item", {
+            m("input.w3-input.w3-border-bottom.w3-half", {
               type: "text",
               value: state.title,
               placeholder: 'Store Name',
@@ -124,7 +124,7 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
               },
             }),
             m(
-              "button.w3-button.w3-bar-item",
+              "button.w3-button.w3-half",
               { onclick: () => validateAddOrUpdateStore(mdl, state, isEdit) },
               isEdit ? "Update Name" : "Add Store"
             )),
@@ -142,12 +142,17 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
           state.cats.map(cat =>
             m('.w3-row', {
               id: cat.id, key: cat.id,
+              ondblclick: () => {
+                console.log(state)
+                state.cat = cat
+                state.editCat = true
+              }
             },
               m('p.handle.w3-col s1', m.trust('&#8942;')),
               m('.w3-col s8',
                 m('.w3-row',
                   m("label",
-                    state.editCat == cat.id ?
+                    state.cat?.id == cat.id ?
                       m(CatForm, { mdl, cat: state.cat, isEdit, closeCatForm }) : cat.title),
                 ),
 
@@ -156,19 +161,13 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
 
               ),
               m(".w3-col s3.w3-row",
-                m("button.w3-button.w3-border.w3-col", {
-                  class: state.editCat ? 'w3-border-red' : 'w3-border-green',
+                (state.cat?.id == cat.id) && m("button.w3-button.w3-col", {
+                  class: 'w3-border-red',
                   onclick: () => {
-                    if (state.editCat == cat.id) {
-                      state.cat = null
-                      state.editCat = false
-
-                    } else {
-                      state.cat = cat
-                      state.editCat = cat.id
-                    }
+                    state.cat = null
+                    state.editCat = false
                   }
-                }, state.editCat ? 'Cancel' : m.trust('&#9997;')),
+                }, 'Cancel'),
 
               ),
 

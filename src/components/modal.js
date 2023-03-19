@@ -12,14 +12,16 @@ const Modal = ({ attrs: { mdl } }) => {
             },
             style: { display: mdl.state.showModal ? "block" : "none" },
           },
+          m('.modal-header'),
           m(
             "modal.w3-modal-content",
-            m(".w3-container", {
+            m(".w3-section", {
               style: {
                 maxHeight: '80vh', overflowX: 'hidden', overflowY: 'auto'
               }
             }, m(mdl.state.modalContent.content, mdl.state.modalContent.attrs))
-          )
+          ),
+          m('.modal-footer')
         ) : null
     },
   }

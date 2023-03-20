@@ -5,6 +5,9 @@ import Sortable from "sortablejs"
 import { load, openModal } from "../model"
 import { propEq } from "ramda"
 
+
+const filterForPurchased = (xs, isPurchased) => xs.filter(propEq('purchased', isPurchased))
+
 const updateItemOrder = (mdl, { newIndex, item }) => {
   console.log(item)
   const updatedItem = mdl.items.find(propEq('id', item.id))
@@ -90,11 +93,14 @@ const Cat = ({ attrs: { mdl, cat } }) => {
             oncreate: setupDrag(mdl, 'create'),
             onupdate: setupDrag(mdl, 'update'),
           },
-          cat.items.map((item, idx) => m('.w3-row',
+          filterForPurchased(cat.items, false).map((item, idx) => m('.w3-row',
             { id: item.id, key: item.id },
             m('p.handle.w3-col s1', m.trust('&#8942;')),
-            m(Item, { item, mdl })))
-        )
+            m(Item, { item, mdl }))),
+          filterForPurchased(cat.items, true).map((item, idx) => m('.w3-row',
+            { id: item.id, key: item.id },
+            m(Item, { item, mdl }))),
+        ),
       ),
   }
 }

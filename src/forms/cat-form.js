@@ -34,15 +34,17 @@ const CatForm = ({ attrs: { isEdit, cat, closeCatForm } }) => {
       m(
         "form.w3-animate-opacity",
         { onsubmit: (e) => e.preventDefault() },
-        m('.w3-bar',
-          m("input.w3-input.w3-border-bottom", {
+        m('.w3-row',
+          m("input.w3-input.w3-border-bottom.w3-col s6", {
             oncreate: ({ dom }) => { dom.select(); dom.focus() },
             type: "text",
             value: state.title,
             placeholder: "Category Title",
             oninput: (e) => (state.title = e.target.value),
-          }), m('.w3-row', m(
-            "button.w3-button.w3-border.w3-border-orange",
+          }), m('.w3-row.w3-col s6', {
+            class: isEdit ? 'w3-col s6' : 'w3-block',
+          }, m(
+            "button.w3-button.w3-border.w3-border-orange.w3-col",
             { class: isEdit ? 'w3-col s6' : 'w3-block', onclick: () => addOrEditCat(mdl, state, isEdit, closeCatForm) },
             isEdit ? "Save" : "Add"
           ),

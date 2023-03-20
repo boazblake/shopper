@@ -1,7 +1,6 @@
 import m from "mithril"
 import { propEq } from "ramda"
-import { STORE, CAT, ITEM, load, units, closeModal } from "../model"
-import Sortable from "sortablejs"
+import { ITEM, load, units, closeModal } from "../model"
 
 
 

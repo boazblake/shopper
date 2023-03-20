@@ -106,15 +106,21 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
 
       return m(
         "form.w3-container.w3-card.w3-white.w3-animate-zoom",
-        { onsubmit: (e) => e.preventDefault() },
+        {
+          onsubmit: (e) => {
+            e.preventDefault()
+            validateAddOrUpdateStore(mdl, state, isEdit)
+          }
+        },
         m('.w3-section', m(
           "button.w3-button.w3-black.w3-border.w3-border-black.w3-text-white",
           { onclick: () => closeModal(mdl) }, m.trust("&#10005;")
         )),
         m(
           ".w3-section",
-          m('.w3-bar.w3-block',
-            m("input.w3-input.w3-border-bottom.w3-half", {
+          m('.w3-row',
+            m("input.w3-input.w3-border-bottom", {
+              class: isEdit ? 'w3-col s6' : '',
               type: "text",
               value: state.title,
               placeholder: 'Store Name',
@@ -124,10 +130,11 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
               },
             }),
             m(
-              "button.w3-button.w3-half",
-              { onclick: () => validateAddOrUpdateStore(mdl, state, isEdit) },
-              isEdit ? "Update Name" : "Add Store"
-            )),
+              "button.w3-button", {
+              class: isEdit ? 'w3-col s6' : '',
+            }, isEdit ? "Update Name" : "Add Store"
+            )
+          ),
 
           isEdit && m('.w3-block', m(CatForm, { mdl, closeCatForm })),
 
@@ -136,9 +143,11 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
           ".w3-list", {
           oncreate: setupDrag(mdl),
           style: {
-            height: '400px', overflowX: 'hidden', overflowY: 'auto'
+            maxHeight: '400px', verflowX: 'hidden', overflowY: 'auto'
           }
         },
+
+
           state.cats.map(cat =>
             m('.w3-row', {
               id: cat.id, key: cat.id,
@@ -172,7 +181,9 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
               ),
 
             )
-          )),
+          )
+        )
+        ,
 
         isEdit && m(
           "button.w3-button.w3-border.w3-border-red.w3-margin-top.w3-left",

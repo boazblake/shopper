@@ -23,8 +23,6 @@ const App = (mdl) => {
       return m(
         "page.w3-theme",
         m(Modal, { mdl }),
-
-
         m(
           "section.#main",
           {

@@ -3,6 +3,51 @@ import Sortable from 'sortablejs'
 import { CatForm } from './cat-form'
 import { propEq } from 'ramda'
 import { STORE, load, closeModal } from '../model'
+import { DoubleTap } from '../helpers'
+
+
+const StoreCat = () => {
+  const setupCat = (state, cat) => ({ dom }) => {
+    const hammer = new Hammer.Manager(dom)
+    hammer.add(DoubleTap())
+    hammer.on('doubletap', () => state.isEdit = true)
+  }
+
+  const state = {
+    isEdit: false,
+    hammer: null
+  }
+
+  return {
+    view: ({ attrs: { mdl, cat } }) => m('.w3-row', {
+      id: cat.id, key: cat.id,
+      oncreate: setupCat(state, cat),
+    },
+      m('p.handle.w3-col s1', m.trust('&#8942;')),
+      m('.w3-col s8',
+        m('.w3-row',
+          m("label",
+            state.isEdit ? m(CatForm, { mdl, cat: cat, isEdit: state.isEdit, closeCatForm: () => state.isEdit = false }) : cat.title),
+        ),
+
+        m('.w3-row',
+          m("label.w3-col", cat.items.length))
+
+      ),
+      m(".w3-col s3.w3-row",
+        state.isEdit && m("button.w3-button.w3-col", {
+          class: 'w3-border-red',
+          onclick: (e) => {
+            e.preventDefault()
+            state.isEdit = false
+          }
+        }, 'Cancel'),
+
+      ),
+
+    )
+  }
+}
 
 const updateCatOrder = (mdl, { newIndex, item }) => {
   const updatedCat = mdl.cats.find(propEq('id', item.id))
@@ -78,20 +123,7 @@ const deleteStore = (mdl, id) =>
 const StoreForm = ({ attrs: { mdl, isEdit } }) => {
 
 
-  const state = {
-    title: "",
-    addNewCat: false,
-    editCat: false,
-    cat: null,
-  }
-
-  const closeCatForm = () => {
-    state.title = ""
-    state.addNewCat = false
-    state.editCat = false
-    state.cat = null
-  }
-
+  const state = {}
 
   return {
     view: ({ attrs: { mdl } }) => {
@@ -112,10 +144,7 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
             validateAddOrUpdateStore(mdl, state, isEdit)
           }
         },
-        m('.w3-section', m(
-          "button.w3-button.w3-black.w3-border.w3-border-black.w3-text-white",
-          { onclick: () => closeModal(mdl) }, m.trust("&#10005;")
-        )),
+
         m(
           ".w3-section",
           m('.w3-row',
@@ -131,12 +160,13 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
             }),
             m(
               "button.w3-button", {
+              type: 'submit',
               class: isEdit ? 'w3-col s6' : '',
             }, isEdit ? "Update Name" : "Add Store"
             )
           ),
 
-          isEdit && m('.w3-block', m(CatForm, { mdl, closeCatForm })),
+          isEdit && m('.w3-block', m(CatForm, { mdl, closeCatForm: () => mdl.state.showModal = false })),
 
         ),
         isEdit && m(
@@ -148,46 +178,14 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
         },
 
 
-          state.cats.map(cat =>
-            m('.w3-row', {
-              id: cat.id, key: cat.id,
-              ondblclick: () => {
-                console.log(state)
-                state.cat = cat
-                state.editCat = true
-              }
-            },
-              m('p.handle.w3-col s1', m.trust('&#8942;')),
-              m('.w3-col s8',
-                m('.w3-row',
-                  m("label",
-                    state.cat?.id == cat.id ?
-                      m(CatForm, { mdl, cat: state.cat, isEdit, closeCatForm }) : cat.title),
-                ),
-
-                m('.w3-row',
-                  m("label.w3-col", cat.items.length))
-
-              ),
-              m(".w3-col s3.w3-row",
-                (state.cat?.id == cat.id) && m("button.w3-button.w3-col", {
-                  class: 'w3-border-red',
-                  onclick: () => {
-                    state.cat = null
-                    state.editCat = false
-                  }
-                }, 'Cancel'),
-
-              ),
-
-            )
+          state.cats.map(cat => m(StoreCat, { mdl, state, cat })
           )
         )
         ,
 
         isEdit && m(
           "button.w3-button.w3-border.w3-border-red.w3-margin-top.w3-left",
-          { onclick: () => deleteStore(mdl, store.id) },
+          { onclick: (e) => { e.preventDefault(); deleteStore(mdl, store.id) } },
           "Delete"
         ),
       )

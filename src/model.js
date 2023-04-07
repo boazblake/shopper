@@ -1,3 +1,4 @@
+import m from 'mithril'
 import Task from "data.task"
 import http from "./http"
 import { log, uuid } from "./helpers"
@@ -82,7 +83,7 @@ const load = (mdl) => {
     .fork(log("error"), onSuccess)
 }
 
-const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => ({
+const ITEM = ({ catId, title, notes, quantity, unit, price, order, purchased }) => ({
   id: uuid(),
   title,
   notes,
@@ -92,7 +93,7 @@ const ITEM = ({ catId, title, notes, quantity, unit, price, order }) => ({
   unit,
   price,
   notes,
-  purchased: false,
+  purchased
 })
 const CAT = (title, storeId, order = 0) => ({
   id: uuid(),

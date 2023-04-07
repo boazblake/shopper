@@ -7,8 +7,8 @@ import { ITEM, load, units, closeModal } from "../model"
 const getCurrentCatItemLength = (mdl, id) => mdl.cats.find(propEq('id', id)).items.length || 0
 
 const validateAddOrUpdateItem = (mdl, state, isEdit) => {
-  const { catId, title, notes, order, quantity, unit, price, id } = state
-  let item = isEdit ? { catId, title, notes, order, quantity, unit, price, id } : ITEM({ catId, title, notes, order: getCurrentCatItemLength(mdl, catId), quantity, unit, price })
+  const { catId, title, notes, order, quantity, unit, price, id, purchased } = state
+  let item = isEdit ? { catId, title, notes, order, quantity, unit, price, id, purchased } : ITEM({ catId, title, notes, order: getCurrentCatItemLength(mdl, catId), quantity, unit, price, purchased })
   const onSuccess = (data) => {
     state = {
       catId, title: "", notes: "", order: 0, quantity: "", unit: "", price: 0
@@ -17,8 +17,8 @@ const validateAddOrUpdateItem = (mdl, state, isEdit) => {
     closeModal(mdl)
   }
   const addOrUpdateItemTask = (mdl, item) => isEdit
-    ? mdl.http.postTask(mdl, "items", item)
-    : mdl.http.putTask(mdl, `items/${item.id}`, item)
+    ? mdl.http.putTask(mdl, `items/${item.id}`, item)
+    : mdl.http.postTask(mdl, "items", item)
 
   //VALIDATIONSS
   return addOrUpdateItemTask(mdl, item).
@@ -41,13 +41,15 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
     order: '',
     quantity: '',
     unit: '',
-    price: ''
+    price: '',
+    purchased: false,
   }
 
   if (catId) state.catTitle = mdl.cats.find(propEq('id', catId)).title
 
   if (isEdit) {
     state.catId = item.catId
+    state.purchased = item.purchased
     state.title = item.title
     state.notes = item.notes
     state.order = item.order
@@ -60,17 +62,12 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
   return {
     view: ({ attrs: { mdl } }) => m(
       "form.w3-container.w3-card.w3-white.w3-animate-zoom",
-      { onsubmit: (e) => e.preventDefault() },
-      m('.w3-section', m(
-        "button.w3-button.w3-black.w3-border-black.w3-text-white",
-        {
-          // style: {
-          //   position: 'absolute',
-          //   top: '-50px',
-          // },
-          onclick: () => closeModal(mdl)
-        }, m.trust("&#10005;")
-      )),
+      {
+        onsubmit: (e) => {
+          e.preventDefault()
+          validateAddOrUpdateItem(mdl, state, isEdit);
+        }
+      },
       m(
         ".w3-section",
         m("label", m("b", "Item")),
@@ -126,13 +123,12 @@ const ItemForm = ({ attrs: { mdl, catId, item, isEdit } }) => {
 
       m(
         "button.w3-button.w3-block.w3-orange.w3-margin-bottom",
-        { onclick: () => validateAddOrUpdateItem(mdl, state, isEdit) },
-        isEdit ? "Update" : "Add"
+        { type: 'submit' }, isEdit ? "Update" : "Add"
       ),
 
       isEdit && m(
         "button.w3-button.w3-red.w3-margin-top.w3-left",
-        { onclick: () => deleteItem(mdl, item.id) },
+        { onclick: (e) => { e.preventDefault(); deleteItem(mdl, item.id) } },
         "Delete"
       ),
 

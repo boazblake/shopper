@@ -4,7 +4,7 @@ import { CAT, load } from '../model'
 const deleteCat = (mdl, cat, closeCatForm) => {
 
   const onError = log("error")
-  const onSuccess = () => { load(mdl); closeCatForm() }
+  const onSuccess = () => { closeCatForm(); load(mdl); }
 
 
   mdl.http.deleteTask(mdl, `cats/${cat.id}`).fork(onError, onSuccess)

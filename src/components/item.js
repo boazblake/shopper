@@ -1,7 +1,14 @@
 import m from "mithril"
 import { ItemForm } from '../forms'
 import { openModal, load } from "../model";
+import { DoubleTap } from "../helpers";
 
+const setupItem = (mdl, item, state) => ({ dom }) => {
+  const hammer = new Hammer.Manager(dom)
+  hammer.add(DoubleTap())
+  hammer.on('doubletap', e => { editItem(e, mdl, item) })
+  // m.redraw()
+}
 
 const purchaseItem = (mdl, state, item) => e => {
   let dist = Array.from(e.target.children)[1].getBoundingClientRect().x
@@ -11,7 +18,6 @@ const purchaseItem = (mdl, state, item) => e => {
 
   if (state.purchased) {
     if (dist < state.scrolled) {
-      console.log(state.scrolled, dist,)
       state.purchased = false
       item.purchased = !item.purchased
       mdl.http.putTask(mdl, `items/${item.id}`, item).fork(log('e'), () => load(mdl))
@@ -21,10 +27,9 @@ const purchaseItem = (mdl, state, item) => e => {
 
 }
 
-const editItem = (mdl, item) => {
-  const content = ItemForm
-  const opts = { catId: item.catId, item, isEdit: true }
-  openModal({ content, mdl, opts })
+const editItem = (e, mdl, item) => {
+  openModal({ content: ItemForm, mdl, opts: { catId: item.catId, item, isEdit: true } })
+  m.redraw()
 }
 
 
@@ -87,14 +92,14 @@ const Item = () => {
         "li",
         {
           id: item.id,
-          ondblclick: e => editItem(mdl, item),
+          'data-hammer': item.id,
+          oncreate: setupItem(mdl, item, state),
           class: item.purchased ? 'w3-grey w3-text-white' : ''
         },
         m('.swipe-container',
           {
             onscroll: purchaseItem(mdl, state, item),
             ontouchend: handleSwipe(mdl, state, item),
-            onclick: e => editItem(mdl, item),
           },
           m('.swipe-action.swipe-left', m('icon', m.trust('&#9997;'))),
           m('.swipe-element', { 'data-id': item.id }, m("img.w3-left", {

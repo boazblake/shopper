@@ -66,29 +66,6 @@ const setupDrag = mdl => ({ dom }) => {
     onEnd: cat => updateCatOrder(mdl, cat)
   }
 
-  // [
-  //   'onChoose',
-  //   'onStart',
-  //   'onEnd',
-  //   'onAdd',
-  //   'onUpdate',
-  //   'onSort',
-  //   'onRemove',
-  //   'onChange',
-  //   'onUnchoose'
-  // ].forEach(function (name) {
-  //   options[name] = function (evt) {
-  //     console.log({
-  //       'event': name,
-  //       'this': this,
-  //       'item': evt.item,
-  //       'from': evt.from,
-  //       'to': evt.to,
-  //       'oldIndex': evt.oldIndex,
-  //       'newIndex': evt.newIndex
-  //     })
-  //   }
-  // })
   mdl.state.dragCatList = Sortable.create(dom, options)
 }
 

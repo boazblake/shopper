@@ -1,7 +1,7 @@
 import m from 'mithril'
 import Sortable from 'sortablejs'
 import { CatForm } from './cat-form'
-import { propEq } from 'ramda'
+import { propEq, clone } from 'ramda'
 import { STORE, load, closeModal } from '../model'
 import { DoubleTap } from '../helpers'
 
@@ -110,7 +110,7 @@ const StoreForm = ({ attrs: { mdl, isEdit } }) => {
         state.title = store.title
         state.order = store.order
         state.id = store.id
-        state.cats = store.cats
+        state.cats = clone(store.cats)
       }
 
       return m(

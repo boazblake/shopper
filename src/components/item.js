@@ -101,7 +101,7 @@ const Item = () => {
             onscroll: purchaseItem(mdl, state, item),
             ontouchend: handleSwipe(mdl, state, item),
           },
-          m('.swipe-action.swipe-left', m('icon', m.trust('&#9997;'))),
+          m('.swipe-action.swipe-left', item.purchased ? m('icon.w3-text-white', m.trust('&minus;')) : m('icon.w3-text-green', m.trust('&check;'))),
           m('.swipe-element', { 'data-id': item.id }, m("img.w3-left", {
             src: item.img, style: { maxWidth: '85px' }
           }),
